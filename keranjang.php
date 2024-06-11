@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url("bg\ 1.png");
+            background-image: url("bg 1.png");
             margin: 0;
             padding: 20px;
         }
@@ -21,6 +21,17 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
         }
 
         .item {
@@ -69,6 +80,9 @@
 </head>
 
 <body>
+    <form action="dashboard.php" method="GET">
+        <button type="submit" class="back-button">&larr;</button>
+    </form>
     <div class="container">
         <div class="item">
             <img src="ikan1.jpg" alt="Ikan 1">
@@ -99,58 +113,57 @@
             </div>
         </div>
 
-
         <div class="total-price">Total: Rp 13.000</div>
     </div>
 
     <script>
-        //menambah jml item ketika + diklik
+        // menambah jml item ketika + diklik
         function increaseQuantity(button) {
-            //mengambil kotak input jumlah item yang ada sebelum button +
+            // mengambil kotak input jumlah item yang ada sebelum button +
             var input = button.previousElementSibling;
-            //mengambil jumlah item saat ini dari kotak input dan mengonversinya ke dalam angka
+            // mengambil jumlah item saat ini dari kotak input dan mengonversinya ke dalam angka
             var currentValue = parseInt(input.value);
-            //menambah jml item 1
+            // menambah jml item 1
             input.value = currentValue + 1;
-            //mengupdate total harga
+            // mengupdate total harga
             updateTotalPrice();
         }
 
-        //mengurangi jml item ketika - diklik
+        // mengurangi jml item ketika - diklik
         function decreaseQuantity(button) {
-            //mengambil kotak input jumlah item yang ada setelah tombol -
+            // mengambil kotak input jumlah item yang ada setelah tombol -
             var input = button.nextElementSibling;
-            //mengambil jumlah item saat ini dari kotak input dan mengonversinya ke dalam angka
+            // mengambil jumlah item saat ini dari kotak input dan mengonversinya ke dalam angka
             var currentValue = parseInt(input.value);
-            //periksa apakah item saat ini > 1
+            // periksa apakah item saat ini > 1
             if (currentValue > 1) {
-                //mengurangi jml item 1
+                // mengurangi jml item 1
                 input.value = currentValue - 1;
-                //mengupdate total harga
+                // mengupdate total harga
                 updateTotalPrice();
             }
         }
 
-        //mengupdate total harga
+        // mengupdate total harga
         function updateTotalPrice() {
-            //ambil semua item di keranjang
+            // ambil semua item di keranjang
             var items = document.querySelectorAll('.item');
-            //inisialisasi total harga 0
+            // inisialisasi total harga 0
             var totalPrice = 0;
-            //iterasi item dlm keranjang
+            // iterasi item dlm keranjang
             items.forEach(function(item) {
-                //mengambil harga dari setiap item
+                // mengambil harga dari setiap item
                 var priceElement = item.querySelector('.item-price');
-                //mengambil jumlah item dari setiap item
+                // mengambil jumlah item dari setiap item
                 var quantityInput = item.querySelector('input[type="number"]');
-                //mengubah harga menjadi angka bulat
+                // mengubah harga menjadi angka bulat
                 var price = parseInt(priceElement.innerText.replace('Rp ', '').replace('.', ''));
-                //mengubah jumlah item menjadi angka bulat
+                // mengubah jumlah item menjadi angka bulat
                 var quantity = parseInt(quantityInput.value);
-                //hitung total harga dikali jml item
+                // hitung total harga dikali jml item
                 totalPrice += price * quantity;
             });
-            //menampilkan total harga
+            // menampilkan total harga
             document.querySelector('.total-price').innerText = 'Total: Rp ' + totalPrice.toLocaleString();
         }
     </script>

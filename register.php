@@ -1,56 +1,62 @@
 <?php
 
-//menyertakan file koneksi database
+// Menyertakan file koneksi database
 include "database.php";
 
-//memulai sesion
+// Memulai sesi
 session_start();
 
-//variabel pesan registrasi
+// Variabel pesan registrasi
 $register_message = "";
 
-//nama cookie untuk menyimpan informasi pengguna yang terdaftar
+// Nama cookie untuk menyimpan informasi pengguna yang terdaftar
 $cookie_name = "registered_user";
 
-//jika pengguna sudah login, langsung arahkan ke dashboard
+// Jika pengguna sudah login, langsung arahkan ke dashboard
 if (isset($_SESSION["is_login"])) {
     header("location: dashboard.php");
     exit();
 }
 
-//mengecek apakah form registrasi sudah dikirim
+// Mengecek apakah form registrasi sudah dikirim
 if (isset($_POST["register"])) {
-    //mendapatkan nilai username, password, dan email dari form registrasi
+    // Mendapatkan nilai username, password, dan email dari form registrasi
     $username = $_POST["username"];
     $password = $_POST["password"];
     $email = $_POST["email"];
 
-    //mengenkripsi password dengan algoritma SHA-256
+    // Mengenkripsi password dengan algoritma SHA-256
     $hash_password = hash("sha256", $password);
 
     try {
-        //query untuk memasukkan data pengguna baru ke dalam database
-        $sql = "INSERT INTO user (username, email, password) VALUES ('$username', '$email', '$hash_password')";
+        // Query untuk memasukkan data pengguna baru ke dalam database menggunakan prepared statements
+        $stmt = $db->prepare("INSERT INTO user (username, email, password) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $username, $email, $hash_password);
 
-        //menjalankan query dan mengecek apakah berhasil
-        if ($db->query($sql)) {
-            //pesan jika registrasi berhasil
-            $register_message = "daftar akun berhasil, silakan login";
+        // Menjalankan query dan mengecek apakah berhasil
+        if ($stmt->execute()) {
+            // Pesan jika registrasi berhasil
+            $register_message = "Daftar akun berhasil, silakan login";
 
-            //membuat cookie untuk pengguna yang terdaftar dengan durasi 2 jam
-            setcookie($cookie_name, $username, time() + (7200), "/");
+            // Membuat cookie untuk pengguna yang terdaftar dengan durasi 2 jam
+            setcookie($cookie_name, $username, time() + 7200, "/");
         } else {
-            //pesan jika terjadi kesalahan saat registrasi
-            $register_message = "daftar akun gagal, silakan coba lagi";
+            // Pesan jika terjadi kesalahan saat registrasi
+            $register_message = "Daftar akun gagal, silakan coba lagi";
         }
-    } catch (mysqli_sql_exception) {
-        //pesan gagal jika username sudah ada di database
-        $register_message = "username sudah ada, silakan ganti yang lain";
+
+        // Menutup statement
+        $stmt->close();
+    } catch (mysqli_sql_exception $e) {
+        // Pesan gagal jika username sudah ada di database
+        $register_message = "Username sudah ada, silakan ganti yang lain";
     }
 
-    //menutup koneksi database
+    // Menutup koneksi database
     $db->close();
 }
+?>
+
 
 ?>
 

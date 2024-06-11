@@ -1,62 +1,62 @@
 <?php
-
-//menyertakan file koneksi database
+// menyertakan file koneksi database
 include "database.php";
 
-//memulai sesion
+// memulai sesi
 session_start();
 
-//variabel pesan login
-$login_message = "";
-
-//nama cookie untuk menyimpan informasi login
+// nama cookie untuk menyimpan informasi login
 $cookie_name = "logged_in_user";
 
-//jika pengguna sudah login, langsung arahkan ke dashboard
+// jika pengguna sudah login, langsung arahkan ke dashboard
 if (isset($_SESSION["is_login"])) {
     header("location: dashboard.php");
     exit();
 }
 
-//mengecek apakah form login sudah dikirim
+// variabel pesan login
+$login_message = "";
+
+// mengecek apakah form login sudah dikirim
 if (isset($_POST['login'])) {
-    //mendapatkan nilai username dan password dari form login
+    // mendapatkan nilai username dan password dari form login
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    //mengenkripsi password dengan algoritma SHA-256
+    // mengenkripsi password dengan algoritma SHA-256
     $hash_password = hash('sha256', $password);
 
-    //query untuk mengecek keberadaan username dan password yang cocok di database
+    // query untuk mengecek keberadaan username dan password yang cocok di database
     $sql = "SELECT * FROM user WHERE username='$username' AND password='$hash_password'";
 
-    //menjalankan query dan menyimpan hasilnya dalam variabel $result
+    // menjalankan query dan menyimpan hasilnya dalam variabel $result
     $result = $db->query($sql);
 
-    //mengecek apakah ada baris hasil dari query
+    // mengecek apakah ada baris hasil dari query
     if ($result->num_rows > 0) {
-        //mengambil data pengguna dari hasil query
+        // mengambil data pengguna dari hasil query
         $data = $result->fetch_assoc();
 
-        //menyimpan username dan menandai pengguna sudah login dalam sesi
+        // menyimpan username dan menandai pengguna sudah login dalam sesi
         $_SESSION["username"] = $data["username"];
         $_SESSION["is_login"] = true;
 
-        //membuat cookie untuk pengguna yang login dengan durasi 2 jam
-        setcookie($cookie_name, $username, time() + (7200), "/");
+        // membuat cookie untuk pengguna yang login dengan durasi 2 jam
+        setcookie($cookie_name, $username, time() + 7200, "/");
 
-        //mengarahkan pengguna ke halaman dashboard setelah berhasil login
+        // mengarahkan pengguna ke halaman dashboard setelah berhasil login
         header("location: dashboard.php");
         exit();
     } else {
-        //menampilkan pesan jika akun tidak ditemukan
+        // menampilkan pesan jika akun tidak ditemukan
         $login_message = "akun tidak ditemukan";
     }
 
-    //menutup koneksi database
+    // menutup koneksi database
     $db->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

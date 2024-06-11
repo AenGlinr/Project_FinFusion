@@ -41,6 +41,7 @@ if (!isset($_SESSION['username'])) {
             justify-content: center;
             align-items: center;
             height: 100vh;
+            position: relative;
         }
 
         .profile-container {
@@ -82,10 +83,23 @@ if (!isset($_SESSION['username'])) {
         .logout-button:hover {
             background-color: red;
         }
+
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
+    <form action="dashboard.php" method="GET">
+        <button type="submit" class="back-button">&larr;</button>
+    </form>
     <div class="profile-container">
         <img src="profile.png" alt="Profile Image" class="profile-image">
         <h2 class="username"><?= htmlspecialchars($_SESSION["username"]) ?></h2>

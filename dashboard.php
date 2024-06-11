@@ -1,3 +1,24 @@
+<?php
+
+// Pastikan untuk melakukan koneksi ke database di sini jika diperlukan
+
+// Fungsi-fungsi untuk validasi input dan keamanan lainnya bisa dimasukkan di sini jika diperlukan
+
+// Proses penerimaan data dari form register.php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Ambil data dari form
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Lakukan sesuatu dengan data tersebut, misalnya simpan ke database
+
+    // Redirect ke halaman login setelah proses registrasi berhasil
+    header("Location: login.php");
+    exit();
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -238,9 +259,9 @@
         <div class="sidebar">
             <h3>Finfusion App</h3>
             <ul>
-                <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="profil.php"><i class="fas fa-home"></i> Profile</a></li>
                 <li><a href="#"><i class="fas fa-search"></i> Browse</a></li>
-                <li><a href="#"><i class="fas fa-shopping-cart"></i> Keranjang</a></li>
+                <li><a href="keranjang.php"><i class="fas fa-shopping-cart"></i> Keranjang</a></li>
                 <li>
                     <div class="list-title-style">
                         <i class="fas fa-list"></i>

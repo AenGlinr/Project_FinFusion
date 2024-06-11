@@ -68,7 +68,8 @@ if (isset($_POST['login'])) {
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: white;
+            background-image: url('bg 2.jpg');
+            background-size: cover;
             margin: 0;
             padding: 0;
             display: flex;

@@ -84,7 +84,7 @@
             </div>
         </div>
 
-        <!-- Contoh item lainnya -->
+        <!-- Contoh -->
         <div class="item">
             <img src="ikan2.jpg" alt="Ikan 2">
             <div class="item-info">
@@ -99,38 +99,58 @@
             </div>
         </div>
 
-        <!-- Tambahkan item lainnya sesuai kebutuhan -->
 
         <div class="total-price">Total: Rp 13.000</div>
     </div>
 
     <script>
+        //menambah jml item ketika + diklik
         function increaseQuantity(button) {
+            //mengambil kotak input jumlah item yang ada sebelum button +
             var input = button.previousElementSibling;
+            //mengambil jumlah item saat ini dari kotak input dan mengonversinya ke dalam angka
             var currentValue = parseInt(input.value);
+            //menambah jml item 1
             input.value = currentValue + 1;
+            //mengupdate total harga
             updateTotalPrice();
         }
 
+        //mengurangi jml item ketika - diklik
         function decreaseQuantity(button) {
+            //mengambil kotak input jumlah item yang ada setelah tombol -
             var input = button.nextElementSibling;
+            //mengambil jumlah item saat ini dari kotak input dan mengonversinya ke dalam angka
             var currentValue = parseInt(input.value);
+            //periksa apakah item saat ini > 1
             if (currentValue > 1) {
+                //mengurangi jml item 1
                 input.value = currentValue - 1;
+                //mengupdate total harga
                 updateTotalPrice();
             }
         }
 
+        //mengupdate total harga
         function updateTotalPrice() {
+            //ambil semua item di keranjang
             var items = document.querySelectorAll('.item');
+            //inisialisasi total harga 0
             var totalPrice = 0;
+            //iterasi item dlm keranjang
             items.forEach(function(item) {
+                //mengambil harga dari setiap item
                 var priceElement = item.querySelector('.item-price');
+                //mengambil jumlah item dari setiap item
                 var quantityInput = item.querySelector('input[type="number"]');
+                //mengubah harga menjadi angka bulat
                 var price = parseInt(priceElement.innerText.replace('Rp ', '').replace('.', ''));
+                //mengubah jumlah item menjadi angka bulat
                 var quantity = parseInt(quantityInput.value);
+                //hitung total harga dikali jml item
                 totalPrice += price * quantity;
             });
+            //menampilkan total harga
             document.querySelector('.total-price').innerText = 'Total: Rp ' + totalPrice.toLocaleString();
         }
     </script>

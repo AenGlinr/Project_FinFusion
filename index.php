@@ -111,6 +111,18 @@ if (isset($_POST['login'])) {
         .login-container input[type="submit"]:hover {
             background-color: blue;
         }
+
+        .link-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .link-container a {
+            text-decoration: none;
+            color: blue;
+            font-size: 14px;
+        }
     </style>
 </head>
 
@@ -127,9 +139,10 @@ if (isset($_POST['login'])) {
             <input type="password" name="password" placeholder="Password" required>
             <input type="submit" name="login" value="LOGIN">
         </form>
-        <a href="register.php">Register</a>
-        <a href="loginAdmin.php">Login Admin</a>
-
+        <div class="link-container">
+            <a href="register.php">Register</a>
+            <a href="loginAdmin.php">Login Admin</a>
+        </div>
     </div>
 </body>
 

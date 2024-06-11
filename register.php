@@ -90,7 +90,7 @@ if (isset($_POST["register"])) {
         .login-container input[type="password"],
         .login-container input[type="email"],
         .login-container input[type="submit"],
-        .login-container input[type="login"] {
+        .login-container input[type="submit"] {
             width: 100%;
             padding: 10px;
             margin-top: 10px;
@@ -129,7 +129,7 @@ if (isset($_POST["register"])) {
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
             <input type="submit" name="register" value="SIGN UP">
-            <input type="button" name="login" value="LOGIN"
+            <input type="submit" name="login" value="LOGIN"
         </form>
         <h5>By clicking continue, you agree to our Terms of Service and Privacy Policy</h5>
         <a href="index.php">Login</a>

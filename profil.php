@@ -33,7 +33,7 @@ if (!isset($_SESSION['username'])) {
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('bg 2.png');
+            background-image: url('bg 1.png');
             background-size: cover;
             margin: 0;
             padding: 0;

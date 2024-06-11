@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-image: url("bg\ 1.png");
             margin: 0;
             padding: 20px;
         }

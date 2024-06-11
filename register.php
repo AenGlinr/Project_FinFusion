@@ -130,7 +130,7 @@ if (isset($_POST["register"])) {
             <input type="submit" name="register" value="SIGN UP">
         </form>
         <h5>By clicking continue, you agree to our Terms of Service and Privacy Policy</h5>
-        <a href="index.php">Login</a>
+        <a href="index.php" class="button">Login</a>
 
     </div>
 

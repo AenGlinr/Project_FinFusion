@@ -124,9 +124,9 @@ if (isset($_POST["register"])) {
 
         <!-- form registrasi -->
         <form action="register.php" method="POST">
+            <input type="email" name="email" placeholder="Email" required>
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
-            <input type="email" name="email" placeholder="Email" required>
             <input type="submit" name="register" value="SIGN UP">
         </form>
         <h5>By clicking continue, you agree to our Terms of Service and Privacy Policy</h5>

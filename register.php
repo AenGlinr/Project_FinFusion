@@ -128,6 +128,7 @@ if (isset($_POST["register"])) {
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
             <input type="submit" name="register" value="SIGN UP">
+            <input type="button" name="login" value="LOGIN"
         </form>
         <h5>By clicking continue, you agree to our Terms of Service and Privacy Policy</h5>
         <a href="index.php">Login</a>

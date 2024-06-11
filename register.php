@@ -89,7 +89,8 @@ if (isset($_POST["register"])) {
         .login-container input[type="text"],
         .login-container input[type="password"],
         .login-container input[type="email"],
-        .login-container input[type="submit"] {
+        .login-container input[type="submit"],
+        .login-container input[type="login"] {
             width: 100%;
             padding: 10px;
             margin-top: 10px;

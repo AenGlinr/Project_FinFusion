@@ -1,40 +1,385 @@
-<?php
-// Memulai sesi atau melanjutkan sesi yang sudah ada
-session_start();
-
-// Mengecek apakah ada permintaan logout yang dikirim melalui metode POST
-if (isset($_POST['logout'])) {
-    // Menghapus semua variabel sesi
-    session_unset();
-    // Menghancurkan sesi
-    session_destroy();
-    // Mengarahkan pengguna ke halaman index.php setelah logout
-    header('location: index.php');
-    // Menghentikan eksekusi skrip untuk memastikan header() berfungsi dengan benar
-    exit();
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login & Register</title>
+    <title>Finfusion App</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: #F5F5F5;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            margin: 20px;
+        }
+
+        .sidebar {
+            width: 256px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #eee;
+        }
+
+        .sidebar i {
+            margin-right: 10px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .content h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .content h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .content p {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .card p {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .card .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .card .button:hover {
+            background-color: #0056b3;
+        }
+
+        .call-to-action {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .call-to-action button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .call-to-action button:hover {
+            background-color: #0056b3;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .card-header .tab {
+            padding: 8px 12px;
+            background-color: #eee;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .card-header .tab:hover {
+            background-color: #ddd;
+        }
+
+        .card-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-content .graphic {
+            width: 100%;
+            height: 200px;
+            background-color: #eee;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .card-content .copy {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card-content .subtitle {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .card-content .description {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .card-content .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .card-content .button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .card-content .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
-
 <body>
-    <!--menyertakan file header.html-->
-    <?php include "header.html" ?>
+    <div class="container">
+        <div class="sidebar">
+            <h3>Finfusion App</h3>
+            <ul>
+                <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#"><i class="fas fa-search"></i> Browse</a></li>
+                <li><a href="#"><i class="fas fa-shopping-cart"></i> Keranjang</a></li>
+                <li>
+                    <div class="list-title-style">
+                        <i class="fas fa-list"></i>
+                        <span>List</span>
+                    </div>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-fish"></i> Ikan</a></li>
+                        <li><a href="#"><i class="fas fa-music"></i> Songs</a></li>
+                    </ul>
+                </li>
+                <li><a href="#"><i class="fas fa-smile"></i> Personalized Picks</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h1>Dashboard</h1>
+            <div class="card-container">
+                <!-- Ikan Cupang -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Ikan Cupang</h2>
+                        <div class="tab">Tab</div>
+                        <div class="tab">Tab</div>
+                        <div class="tab">Tab</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="graphic" style="background-image: url('veiltail_cupang.jpg')"></div>
+                        <div class="copy">
+                            <h3 class="subtitle">Velitail</h3>
+                            <p class="description">Description of playlist</p>
+                        </div>
+                        <div class="button-container">
+                            <button class="button">Play</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Halfsun -->
+                <div class="card">
+                    <div class="card-content">
+                        <div class="graphic" style="background-image: url('halfsun_cupang.jpg')"></div>
+                        <div class="copy">
+                            <h3 class="subtitle">Halfsun</h3>
+                            <p class="description">Description of playlist</p>
+                        </div>
+                        <div class="button-container">
+                            <button class="button">Play</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Plakat -->
+                <div class="card">
+                    <div class="card-content">
+                        <div class="graphic" style="background-image: url('plakat_cupang.jpg')"></div>
+                        <div class="copy">
+                            <h3 class="subtitle">Plakat</h3>
+                            <p class="description">Description of playlist</p>
+                        </div>
+                        <div class="button-container">
+                            <button class="button">Play</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Halfmoon -->
+                <div class="card">
+                    <div class="card-content">
+                        <div class="graphic" style="background-image: url('halfmoon_cupang.jpg')"></div>
+                        <div class="copy">
+                            <h3 class="subtitle">Halfmoon</h3>
+                            <p class="description">Description of playlist</p>
+                        </div>
+                        <div class="button-container">
+                            <button class="button">Play</button>
+                        </div>
+                    </div>
+                </div>
 
-    <!--menampilkan pesan selamat datang dengan username yang disimpan dalam sesi-->
-    <h3>Selamat datang <?= $_SESSION["username"] ?></h3>
+                <!-- Ikan Koi -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Ikan Koi</h2>
+                        <div class="tab">Tab</div>
+                        <div class="tab">Tab</div>
+                        <div class="tab">Tab</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="graphic" style="background-image: url('chagoi_koi.jpg')"></div>
+                        <div class="copy">
+                            <h3 class="subtitle">Chagoi</h3>
+                            <p class="description">Description of playlist</p>
+                        </div>
+                        <div class="button-container">
+                            <button class="button">Play</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tancho -->
+                <div class="card">
+                    <div class="card-content">
+                        <div class="graphic" style="background-image: url('tancho_koi.jpg')"></div>
+                        <div class="copy">
+                            <h3 class="subtitle">Tancho</h3>
+                            <p class="description">Description of playlist</p>
+                        </div>
+                        <div class="button-container">
+                            <button class="button">Play</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Shiro Utsuri -->
+                <div class="card">
+                    <div class="card-content">
+                        <div class="graphic" style="background-image: url('shiro_utsuri_koi.jpg')"></div>
+                        <div class="copy">
+                            <h3 class="subtitle">Shiro Utsuri</h3>
+                            <p class="description">Description of playlist</p>
+                        </div>
+                        <div class="button-container">
+                            <button class="button">Play</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Ochiba Shigure -->
+                <div class="card">
+                    <div class="card-content">
+                        <div class="graphic" style="background-image: url('ochiba_shigure_koi.jpg')"></div>
+                        <div class="copy">
+                            <h3 class="subtitle">Ochiba Shigure</h3>
+                            <p class="description">Description of playlist</p>
+                        </div>
+                        <div class="button-container">
+                            <button class="button">Play</button>
+                        </div>
+                    </div>
+                </div>
 
-    <!--logout-->
-    <form action="dashboard.php" method="POST">
-        <button type="submit" name="logout">logout</button>
-    </form>
+            </div>
+            <div class="call-to-action">
+                <button>Call to action</button>
+            </div>
+        </div>
+    </div>
 </body>
-
 </html>

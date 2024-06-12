@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Lakukan sesuatu dengan data tersebut, misalnya simpan ke database
 
     // Redirect ke halaman login setelah proses registrasi berhasil
-    header("Location: login.php");
+    header("Location: index.php");
     exit();
 }
 ?>

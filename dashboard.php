@@ -13,76 +13,89 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Lakukan sesuatu dengan data tersebut, misalnya simpan ke database
 
     // Redirect ke halaman login setelah proses registrasi berhasil
-    header("Location: index.php");
+    header("Location: login.php");
     exit();
 }
 ?>
 
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finfusion App</title>
+    <title>Halaman dengan Sidebar Tetap</title>
+    <!-- Link Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
             margin: 0;
-            background-color: #F5F5F5;
-            color: #333;
-        }
-
-        .container {
+            padding: 0;
             display: flex;
-            margin: 20px;
         }
-
         .sidebar {
+            box-sizing: border-box;
+            position: fixed;
             width: 256px;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            background: url('bg 1.png') no-repeat center center;
+            background-size: cover;
+            border-right: 1px solid #E0E0E0;
             padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
         .sidebar h3 {
-            margin-bottom: 20px;
-            font-size: 1.2rem;
             font-weight: 600;
-            color: #333;
+            font-size: 20px;
+            line-height: 30px;
+            letter-spacing: -0.01em;
+            color: #000000;
+            margin-bottom: 20px;
         }
-
         .sidebar ul {
             list-style: none;
             padding: 0;
         }
-
-        .sidebar li {
-            margin-bottom: 10px;
+        .sidebar ul li {
+            margin-bottom: 16px;
         }
-
-        .sidebar a {
+        .sidebar ul li a {
             display: flex;
             align-items: center;
-            padding: 10px;
-            border-radius: 8px;
             text-decoration: none;
-            color: #333;
-            transition: background-color 0.3s;
+            color: #000000;
+            padding: 10px 16px;
+            background: #FFFFFF;
+            border-radius: 8px;
+            transition: background 0.3s;
         }
-
-        .sidebar a:hover {
-            background-color: #eee;
+        .sidebar ul li a:hover {
+            background: #F7F7F7;
         }
-
-        .sidebar i {
-            margin-right: 10px;
+        .sidebar ul li a i {
+            margin-right: 8px;
         }
-
+        .sidebar .list-title-style {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 16px;
+            color: #000000;
+            margin-bottom: 8px;
+        }
+        .sidebar .list-title-style i {
+            margin-right: 8px;
+        }
+        .sidebar ul ul {
+            padding-left: 16px;
+        }
         .content {
             flex: 1;
             padding: 20px;
+            margin-left: 256px;
+            background: url('bg 1.png') no-repeat center center;
         }
 
         .content h1 {
@@ -112,11 +125,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         .card {
+            width: 262px;
+            height: 350px; 
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 20px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .card img {
@@ -173,33 +191,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             background-color: #0056b3;
         }
 
-        .card-header {
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
         }
 
-        .card-header h2 {
+        .header h2 {
             font-size: 1.5rem;
             font-weight: 600;
             color: #333;
             margin: 0;
-        }
-
-        .card-header .tab {
-            padding: 8px 12px;
-            background-color: #eee;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #333;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .card-header .tab:hover {
-            background-color: #ddd;
         }
 
         .card-content {
@@ -213,6 +216,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             background-color: #eee;
             border-radius: 8px;
             margin-bottom: 10px;
+            background-size: cover;
         }
 
         .card-content .copy {
@@ -236,7 +240,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .card-content .button-container {
             display: flex;
             justify-content: center;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         .card-content .button {
@@ -252,146 +256,143 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .card-content .button:hover {
             background-color: #0056b3;
         }
+
+        .card-title {
+            grid-column: 1 / -1;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="sidebar">
-            <h3>Finfusion App</h3>
-            <ul>
-                <li><a href="profil.php"><i class="fas fa-home"></i> Profile</a></li>
-                <li><a href="#"><i class="fas fa-search"></i> Browse</a></li>
-                <li><a href="keranjang.php"><i class="fas fa-shopping-cart"></i> Keranjang</a></li>
-                <li>
-                    <div class="list-title-style">
-                        <i class="fas fa-list"></i>
-                        <span>List</span>
+    <div class="sidebar">
+        <h3>Finfusion App</h3>
+        <ul>
+            <li><a href="profil.php"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="#"><i class="fas fa-search"></i> Browse</a></li>
+            <li><a href="keranjang.php"><i class="fas fa-shopping-cart"></i> Keranjang</a></li>
+            <li>
+            <div class="list-title-style">
+                <i class="fas fa-list"></i>
+                <span>List</span>
+            </div>
+                <li><a href="#"><i class="fas fa-fish"></i> Ikan</a></li>
+                <li><a href="#"><i class="fas fa-music"></i> Songs</a></li>
+            </li>
+            <li><a href="#"><i class="fas fa-smile"></i> Personalized picks</a></li>
+        </ul>
+    </div>
+    <div class="content">
+            <h1>Home</h1>
+                    <div class="header">
+                        <h2>Ikan Cupang</h2>
                     </div>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-fish"></i> Ikan</a></li>
-                        <li><a href="#"><i class="fas fa-music"></i> Songs</a></li>
-                    </ul>
-                </li>
-                <li><a href="#"><i class="fas fa-smile"></i> Personalized Picks</a></li>
-            </ul>
-        </div>
-        <div class="content">
-            <h1>Dashboard</h1>
             <div class="card-container">
                 <!-- Ikan Cupang -->
                 <div class="card">
-                    <div class="card-header">
-                        <h2>Ikan Cupang</h2>
-                        <div class="tab">Tab</div>
-                        <div class="tab">Tab</div>
-                        <div class="tab">Tab</div>
-                    </div>
                     <div class="card-content">
-                        <div class="graphic" style="background-image: url('veiltail_cupang.jpg')"></div>
+                        <div class="graphic" style="background-image: url('img/veiltail_cupang.jpg')"></div>
                         <div class="copy">
                             <h3 class="subtitle">Velitail</h3>
                             <p class="description">Description of playlist</p>
                         </div>
                         <div class="button-container">
-                            <button class="button">Play</button>
+                            <button class="button">Detail</button>
                         </div>
                     </div>
                 </div>
                 <!-- Halfsun -->
                 <div class="card">
                     <div class="card-content">
-                        <div class="graphic" style="background-image: url('halfsun_cupang.jpg')"></div>
+                        <div class="graphic" style="background-image: url('img/halfsun_cupang.jpg')"></div>
                         <div class="copy">
                             <h3 class="subtitle">Halfsun</h3>
                             <p class="description">Description of playlist</p>
                         </div>
                         <div class="button-container">
-                            <button class="button">Play</button>
+                            <button class="button">Detail</button>
                         </div>
                     </div>
                 </div>
                 <!-- Plakat -->
                 <div class="card">
                     <div class="card-content">
-                        <div class="graphic" style="background-image: url('plakat_cupang.jpg')"></div>
+                        <div class="graphic" style="background-image: url('img/plakat_cupang.jpg')"></div>
                         <div class="copy">
                             <h3 class="subtitle">Plakat</h3>
                             <p class="description">Description of playlist</p>
                         </div>
                         <div class="button-container">
-                            <button class="button">Play</button>
+                            <button class="button">Detail</button>
                         </div>
                     </div>
                 </div>
                 <!-- Halfmoon -->
                 <div class="card">
                     <div class="card-content">
-                        <div class="graphic" style="background-image: url('halfmoon_cupang.jpg')"></div>
+                        <div class="graphic" style="background-image: url('img/halfmoon_cupang.jpg')"></div>
                         <div class="copy">
                             <h3 class="subtitle">Halfmoon</h3>
                             <p class="description">Description of playlist</p>
                         </div>
                         <div class="button-container">
-                            <button class="button">Play</button>
+                            <button class="button">Detail</button>
                         </div>
                     </div>
                 </div>
 
+                <div class="card-title">Ikan Koi</div>
                 <!-- Ikan Koi -->
                 <div class="card">
-                    <div class="card-header">
-                        <h2>Ikan Koi</h2>
-                        <div class="tab">Tab</div>
-                        <div class="tab">Tab</div>
-                        <div class="tab">Tab</div>
-                    </div>
                     <div class="card-content">
-                        <div class="graphic" style="background-image: url('chagoi_koi.jpg')"></div>
+                        <div class="graphic" style="background-image: url('img/chagoi.jpg')"></div>
                         <div class="copy">
                             <h3 class="subtitle">Chagoi</h3>
                             <p class="description">Description of playlist</p>
                         </div>
                         <div class="button-container">
-                            <button class="button">Play</button>
+                            <button class="button">Detail</button>
                         </div>
                     </div>
                 </div>
                 <!-- Tancho -->
                 <div class="card">
                     <div class="card-content">
-                        <div class="graphic" style="background-image: url('tancho_koi.jpg')"></div>
+                        <div class="graphic" style="background-image: url('img/Tancho.jpg')"></div>
                         <div class="copy">
                             <h3 class="subtitle">Tancho</h3>
                             <p class="description">Description of playlist</p>
                         </div>
                         <div class="button-container">
-                            <button class="button">Play</button>
+                            <button class="button">Detail</button>
                         </div>
                     </div>
                 </div>
                 <!-- Shiro Utsuri -->
                 <div class="card">
                     <div class="card-content">
-                        <div class="graphic" style="background-image: url('shiro_utsuri_koi.jpg')"></div>
+                        <div class="graphic" style="background-image: url('img/shiro.jpeg')"></div>
                         <div class="copy">
                             <h3 class="subtitle">Shiro Utsuri</h3>
                             <p class="description">Description of playlist</p>
                         </div>
                         <div class="button-container">
-                            <button class="button">Play</button>
+                            <button class="button">Detail</button>
                         </div>
                     </div>
                 </div>
                 <!-- Ochiba Shigure -->
                 <div class="card">
                     <div class="card-content">
-                        <div class="graphic" style="background-image: url('ochiba_shigure_koi.jpg')"></div>
+                        <div class="graphic" style="background-image: url('img/ochi.jpeg')"></div>
                         <div class="copy">
                             <h3 class="subtitle">Ochiba Shigure</h3>
                             <p class="description">Description of playlist</p>
                         </div>
                         <div class="button-container">
-                            <button class="button">Play</button>
+                            <button class="button">Detail</button>
                         </div>
                     </div>
                 </div>
@@ -401,6 +402,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <button>Call to action</button>
             </div>
         </div>
-    </div>
 </body>
 </html>

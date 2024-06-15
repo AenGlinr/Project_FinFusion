@@ -270,7 +270,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="sidebar">
         <h3>Finfusion App</h3>
         <ul>
-        <li><a href="profil.php"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="profil.php"><i class="fas fa-home"></i> Profile</a></li>
         <li><a href="#"><i class="fas fa-search"></i> Browse</a></li>
             <li><a href="keranjang.php"><i class="fas fa-shopping-cart"></i> Keranjang</a></li>
             <li>

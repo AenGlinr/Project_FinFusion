@@ -26,7 +26,7 @@ if (isset($_POST['logout'])) {
 
 <body>
     <!--logout-->
-    <form action="dashboard.php" method="POST">
+    <form action="crud.php" method="POST">
         <button type="submit" name="logout">logout</button>
     </form>
 </body>

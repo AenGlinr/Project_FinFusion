@@ -16,11 +16,11 @@ if (isset($_POST['logout'])) {
 
 // Mengecek apakah pengguna sudah login
 if (!isset($_SESSION['username'])) {
-    // Jika pengguna belum login, arahkan ke halaman login
-    header('location: index.php');
+    header('Location: index.php');
     exit();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

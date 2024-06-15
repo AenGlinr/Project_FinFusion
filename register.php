@@ -54,7 +54,9 @@ if (isset($_POST["register"])) {
 
     // Menutup koneksi database
     $db->close();
-} ?>
+} 
+
+?>
 
 
 <!DOCTYPE html>

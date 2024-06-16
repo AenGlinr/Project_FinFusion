@@ -95,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             flex: 1;
             padding: 20px;
             margin-left: 256px;
-            background: url('bg 1.png') no-repeat center center;
+            background-color: white;
         }
 
         .content h1 {
@@ -270,18 +270,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="sidebar">
         <h3>Finfusion App</h3>
         <ul>
-        <li><a href="profil.php"><i class="fas fa-home"></i> Profile</a></li>
-        <li><a href="#"><i class="fas fa-search"></i> Browse</a></li>
+            <li><a href="profil.php"><i class="fas fa-home"></i> Profile</a></li>
+            <li><a href="#"><i class="fas fa-search"></i> Browse</a></li>
             <li><a href="keranjang.php"><i class="fas fa-shopping-cart"></i> Keranjang</a></li>
-            <li>
-            <div class="list-title-style">
-                <i class="fas fa-list"></i>
-                <span>List</span>
-            </div>
-                <li><a href="#"><i class="fas fa-fish"></i> Ikan</a></li>
-                <li><a href="#"><i class="fas fa-music"></i> Songs</a></li>
-            </li>
-            <li><a href="#"><i class="fas fa-smile"></i> Personalized picks</a></li>
         </ul>
     </div>
     <div class="content">
@@ -299,7 +290,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <p class="description">Description of playlist</p>
                         </div>
                         <div class="button-container">
-                            <button class="button">Detail</button>
+                            <a href="detail.php?ikan=veiltail" class="button">Detail</a>
                         </div>
                     </div>
                 </div>
@@ -312,7 +303,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <p class="description">Description of playlist</p>
                         </div>
                         <div class="button-container">
-                            <button class="button">Detail</button>
+                            <a href="detail.php?ikan=halfsun" class="button">Detail</a>
                         </div>
                     </div>
                 </div>
@@ -325,7 +316,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <p class="description">Description of playlist</p>
                         </div>
                         <div class="button-container">
-                            <button class="button">Detail</button>
+                            <a href="detail.php?ikan=plakat" class="button">Detail</a>
                         </div>
                     </div>
                 </div>
@@ -338,7 +329,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <p class="description">Description of playlist</p>
                         </div>
                         <div class="button-container">
-                            <button class="button">Detail</button>
+                            <a href="detail.php?ikan=halfmoon" class="button">Detail</a>
                         </div>
                     </div>
                 </div>
@@ -353,33 +344,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <p class="description">Description of playlist</p>
                         </div>
                         <div class="button-container">
-                            <button class="button">Detail</button>
+                            <a href="detail.php?ikan=chagoi" class="button">Detail</a>
                         </div>
                     </div>
                 </div>
                 <!-- Tancho -->
                 <div class="card">
                     <div class="card-content">
-                        <div class="graphic" style="background-image: url('img/Tancho.jpg')"></div>
+                        <div class="graphic" style="background-image: url('img/Tanco.jpg')"></div>
                         <div class="copy">
                             <h3 class="subtitle">Tancho</h3>
                             <p class="description">Description of playlist</p>
                         </div>
                         <div class="button-container">
-                            <button class="button">Detail</button>
+                            <a href="detail.php?ikan=tancho" class="button">Detail</a>
                         </div>
                     </div>
                 </div>
                 <!-- Shiro Utsuri -->
                 <div class="card">
                     <div class="card-content">
-                        <div class="graphic" style="background-image: url('img/shiro.jpeg')"></div>
+                        <div class="graphic" style="background-image: url('img/shiro.png')"></div>
                         <div class="copy">
                             <h3 class="subtitle">Shiro Utsuri</h3>
                             <p class="description">Description of playlist</p>
                         </div>
                         <div class="button-container">
-                            <button class="button">Detail</button>
+                            <a href="detail.php?ikan=shiro_utsuri" class="button">Detail</a>
                         </div>
                     </div>
                 </div>
@@ -392,7 +383,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <p class="description">Description of playlist</p>
                         </div>
                         <div class="button-container">
-                            <button class="button">Detail</button>
+                            <a href="detail.php?ikan=ochiba_shigure" class="button">Detail</a>
                         </div>
                     </div>
                 </div>

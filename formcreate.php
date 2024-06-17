@@ -35,21 +35,6 @@
         margin: 0;
         }
 
-        .call-to-action button {
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: #fff;
-        border-radius: 8px;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        font-size: 16px;
-        }
-
-        .call-to-action button:hover {
-        background-color: #0056b3;
-        }
-
         .create-form {
         display: flex;
         flex-direction: column;
@@ -97,54 +82,60 @@
     <div class="container">
         <div class="header">
             <h2>Create Fish Entry</h2>
-            <div class="call-to-action">
-                <button>Create</button>
-            </div>
         </div>
-        <form class="create-form">
-            <div class="form-group">
-                <label for="image">Image:</label>
-                <input type="file" id="image" name="image" accept="image/*">
-            </div>
-            <div class="form-group">
-                <label for="name">Fish Name:</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-            <div class="form-group">
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" rows="4" required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="price">Price:</label>
-                <input type="number" id="price" name="price" required>
-            </div>
-            <div class="form-group">
-                <button type="submit">Submit</button>
-            </div>
-        </form>
+        <form class="create-form" action="crud.php" method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="image">Image:</label>
+        <input type="file" id="image" name="image" accept="image/*">
+    </div>
+    <div class="form-group">
+        <label for="name">Fish Name:</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+    <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" rows="4" required></textarea>
+    </div>
+    <div class="form-group">
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" required>
+    </div>
+    <div class="form-group">
+        <button type="submit" name="submit">Submit</button>
+    </div>
+</form>
+
     </div>
 
 
     <?php
-    // Proses form di sini
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Tangkap data dari form
-        $fishName = $_POST['name'];
-        $description = $_POST['description'];
-        $price = $_POST['price'];
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+    // Tangkap data dari form
+    $fishName = $_POST['name'];
+    $description = $_POST['description'];
+    $price = $_POST['price'];
 
-        // Proses penyimpanan data ke database atau tindakan lainnya
-        // Contoh: Simpan data ke database
-        // $conn = new mysqli("localhost", "username", "password", "database");
-        // $sql = "INSERT INTO fish_entries (name, description, price) VALUES ('$fishName', '$description', '$price')";
-        // $result = $conn->query($sql);
-        // if ($result) {
-        //     echo "<p>Data berhasil disimpan.</p>";
-        // } else {
-        //     echo "<p>Gagal menyimpan data.</p>";
-        // }
-    }
-    ?>
-    
+    // Proses penyimpanan data ke database atau tindakan lainnya
+    // Contoh: Simpan data ke database
+    // $conn = new mysqli("localhost", "username", "password", "database");
+    // $sql = "INSERT INTO fish_entries (name, description, price) VALUES ('$fishName', '$description', '$price')";
+    // $result = $conn->query($sql);
+    // if ($result) {
+    //     echo "<p>Data berhasil disimpan.</p>";
+    // } else {
+    //     echo "<p>Gagal menyimpan data.</p>";
+    // }
+
+    // Atau untuk mengonfirmasi, Anda bisa mencetak nilai yang diterima
+    echo "<p>Data yang diterima:</p>";
+    echo "<ul>";
+    echo "<li>Fish Name: $fishName</li>";
+    echo "<li>Description: $description</li>";
+    echo "<li>Price: $price</li>";
+    echo "</ul>";
+}
+?>
+
+
 </body>
 </html>

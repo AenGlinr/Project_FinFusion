@@ -9,22 +9,54 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
-// Proses logout
+// Load fish entries from session
+$fishEntries = isset($_SESSION['fish_entries']) ? $_SESSION['fish_entries'] : [];
+
 if (isset($_POST['logout'])) {
-    // Menghapus semua variabel sesi
-    session_unset();
-    // Menghancurkan sesi
-    session_destroy();
+    // Menghapus semua variabel sesi kecuali $_SESSION['fish_entries']
+    foreach ($_SESSION as $key => $value) {
+        if ($key !== 'fish_entries') {
+            unset($_SESSION[$key]);
+        }
+    }
     // Mengarahkan pengguna ke halaman loginAdmin.php setelah logout
     header('location: loginAdmin.php');
     exit();
 }
 
+
 // Menampilkan semua kesalahan PHP
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+// Proses form di sini
+$fishEntries = [];
+
+// Check if formcreate.php has submitted data
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+    // Tangkap data dari formcreate.php
+    $fishName = htmlspecialchars($_POST['name']);
+    $description = htmlspecialchars($_POST['description']);
+    $price = htmlspecialchars($_POST['price']);
+
+    // Ambil data yang sudah ada dari session jika ada
+    $fishEntries = isset($_SESSION['fish_entries']) ? $_SESSION['fish_entries'] : [];
+
+    // Tambahkan data baru ke dalam array
+    $fishEntries[] = [
+        'name' => $fishName,
+        'description' => $description,
+        'price' => $price,
+        'image_path' => 'path/to/your/image'  // Path to be replaced with actual path if available
+    ];
+
+    // Simpan kembali ke session
+    $_SESSION['fish_entries'] = $fishEntries;
+}
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="id">
@@ -113,16 +145,6 @@ error_reporting(E_ALL);
             margin-bottom: 20px;
             color: #333;
         }
-        .content h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        .content p {
-            line-height: 1.6;
-            color: #555;
-        }
         .card-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -170,162 +192,11 @@ error_reporting(E_ALL);
         .card .button:hover {
             background-color: #0056b3;
         }
-
         .container {
-        position: relative;
-        width: 100%;
-        margin-top: 20px;
-        }
-
-        .header {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        margin-bottom: 10px;
-        }
-
-        .header h2 {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #333;
-        margin: 0;
-        }
-
-        .call-to-action {
-        position: absolute;
-        right: 0;
-        top: 0;
-        margin-top: 10px; /* Optional: adjust to match the alignment as needed */
-        font-size: 1.5rem;
-        }
-
-        .call-to-action button {
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: #fff;
-        border-radius: 8px;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        font-size: 16px;
-        }
-
-        .call-to-action button:hover {
-        background-color: #0056b3;
-        }
-        /* .call-to-action {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 20px;
-            font-size: 1.5rem;
-        }
-        .call-to-action button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            padding: 10px 20px;
-            font-size: 16px;
-        }
-        .call-to-action button:hover {
-            background-color: #0056b3;
-        } */
-
-
-        /* .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .header h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #333;
-            margin: 0;
-        } */
-        .card-content {
-            display: flex;
-            flex-direction: column;
-        }
-        .card-content .graphic {
+            position: relative;
             width: 100%;
-            height: 200px;
-            background-color: #eee;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            background-size: cover;
-        }
-        .card-content .copy {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .card-content .subtitle {
-            font-size: 1rem;
-            font-weight: 500;
-            color: #333;
-        }
-        .card-content .description {
-            font-size: 0.9rem;
-            line-height: 1.5;
-            color: #555;
-        }
-        .card-content .button-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 5px;
-        }
-        .card-content .button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .card-content .button:hover {
-            background-color: #0056b3;
-        }
-        /* .card-title {
-            grid-column: 1 / -1;
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #333;
             margin-top: 20px;
-        } */
-
-        .card-title {
-        grid-column: 1 / -1;
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #333;
-        margin-top: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         }
-
-        .card-title::after {
-        content: 'Create';
-        background-color: #007bff;
-        color: #fff;
-        border-radius: 8px;
-        padding: 10px 20px;
-        margin-left: auto;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        font-size: 16px;
-        }
-
-        .card-title::after:hover {
-        background-color: #0056b3;
-        }
-        
         .profile-container {
             background-color: whitesmoke;
             padding: 20px;
@@ -363,14 +234,18 @@ error_reporting(E_ALL);
         .logout-button:hover {
             background-color: red;
         }
-        .back-button {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
+        .button-create {
+        margin-left: auto; /* Push the button to the right */
+        }
+
+        .button-create button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none; /* Remove underline from button inside link */
         }
     </style>
 </head>
@@ -379,126 +254,33 @@ error_reporting(E_ALL);
         <h3>Finfusion App</h3>
         <ul>
             <li><a href="#"><i class="fas fa-search"></i> Browse</a></li>
-            <!-- <li><a href="#"><i class="fas fa-shopping-cart"></i> Keranjang</a></li> -->
         </ul>
     </div>
     <div class="content">
         <h1>Home</h1>
-    <div class="container">
-        <div class="header">
-            <h2>Ikan Cupang</h2>
-        </div>
-        <div class="call-to-action">
-            <button>Create</button>
-        </div>
-    </div>
-        <div class="card-container">
-            <!-- Ikan Cupang -->
-            <div class="card">
-                <div class="card-content">
-                    <div class="graphic" style="background-image: url('img/veiltail_cupang.jpg')"></div>
-                    <div class="copy">
-                        <h3 class="subtitle">Velitail</h3>
-                        <p class="description">Description of playlist</p>
-                    </div>
-                    <div class="button-container">
-                        <button class="button">Detail</button>
-                    </div>
-                </div>
+            <div class="button-create">
+                <a href="formcreate.php">
+                    <button>Create</button>
+                </a>
             </div>
-            <!-- Halfsun -->
-            <!-- <div class="card">
-                <div class="card-content">
-                    <div class="graphic" style="background-image: url('img/halfsun_cupang.jpg')"></div>
-                    <div class="copy">
-                        <h3 class="subtitle">Halfsun</h3>
-                        <p class="description">Description of playlist</p>
+        <div class="container">
+            <div class="card-container">
+                <?php foreach ($fishEntries as $entry): ?>
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="graphic" style="background-image: url('<?php echo $entry['image_path']; ?>')"></div>
+                            <div class="copy">
+                                <h3 class="subtitle"><?php echo $entry['name']; ?></h3>
+                                <p class="description"><?php echo $entry['description']; ?></p>
+                                <p class="description">Price: <?php echo $entry['price']; ?></p>
+                            </div>
+                            <div class="button-container">
+                                <button class="button">Detail</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="button-container">
-                        <button class="button">Detail</button>
-                    </div>
-                </div>
-            </div> -->
-            <!-- Plakat -->
-            <!-- <div class="card">
-                <div class="card-content">
-                    <div class="graphic" style="background-image: url('img/plakat_cupang.jpg')"></div>
-                    <div class="copy">
-                        <h3 class="subtitle">Plakat</h3>
-                        <p class="description">Description of playlist</p>
-                    </div>
-                    <div class="button-container">
-                        <button class="button">Detail</button>
-                    </div>
-                </div>
-            </div> -->
-            <!-- Halfmoon -->
-            <!-- <div class="card">
-                <div class="card-content">
-                    <div class="graphic" style="background-image: url('img/halfmoon_cupang.jpg')"></div>
-                    <div class="copy">
-                        <h3 class="subtitle">Halfmoon</h3>
-                        <p class="description">Description of playlist</p>
-                    </div>
-                    <div class="button-container">
-                        <button class="button">Detail</button>
-                    </div>
-                </div>
-            </div> -->
-            
-            <div class="card-title">Ikan Koi</div>
-            <!-- Ikan Koi -->
-            <div class="card">
-                <div class="card-content">
-                    <div class="graphic" style="background-image: url('img/chagoi.jpg')"></div>
-                    <div class="copy">
-                        <h3 class="subtitle">Chagoi</h3>
-                        <p class="description">Description of playlist</p>
-                    </div>
-                    <div class="button-container">
-                        <button class="button">Detail</button>
-                    </div>
-                </div>
+                <?php endforeach; ?>
             </div>
-            <!-- Tancho -->
-            <!-- <div class="card">
-                <div class="card-content">
-                    <div class="graphic" style="background-image: url('img/Tancho.jpg')"></div>
-                    <div class="copy">
-                        <h3 class="subtitle">Tancho</h3>
-                        <p class="description">Description of playlist</p>
-                    </div>
-                    <div class="button-container">
-                        <button class="button">Detail</button>
-                    </div>
-                </div>
-            </div> -->
-            <!-- Shiro Utsuri -->
-            <!-- <div class="card">
-                <div class="card-content">
-                    <div class="graphic" style="background-image: url('img/shiro.jpeg')"></div>
-                    <div class="copy">
-                        <h3 class="subtitle">Shiro Utsuri</h3>
-                        <p class="description">Description of playlist</p>
-                    </div>
-                    <div class="button-container">
-                        <button class="button">Detail</button>
-                    </div>
-                </div>
-            </div> -->
-            <!-- Ochiba Shigure -->
-            <!-- <div class="card">
-                <div class="card-content">
-                    <div class="graphic" style="background-image: url('img/ochi.jpeg')"></div>
-                    <div class="copy">
-                        <h3 class="subtitle">Ochiba Shigure</h3>
-                        <p class="description">Description of playlist</p>
-                    </div>
-                    <div class="button-container">
-                        <button class="button">Detail</button>
-                    </div>
-                </div>
-            </div> -->
         </div>
     </div>
     <div class="profile-container">

@@ -170,10 +170,54 @@ error_reporting(E_ALL);
         .card .button:hover {
             background-color: #0056b3;
         }
+
+        .container {
+        position: relative;
+        width: 100%;
+        margin-top: 20px;
+        }
+
+        .header {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 10px;
+        }
+
+        .header h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+        }
+
         .call-to-action {
+        position: absolute;
+        right: 0;
+        top: 0;
+        margin-top: 10px; /* Optional: adjust to match the alignment as needed */
+        font-size: 1.5rem;
+        }
+
+        .call-to-action button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-size: 16px;
+        }
+
+        .call-to-action button:hover {
+        background-color: #0056b3;
+        }
+        /* .call-to-action {
             display: flex;
             justify-content: flex-end;
             margin-top: 20px;
+            font-size: 1.5rem;
         }
         .call-to-action button {
             padding: 10px 20px;
@@ -183,11 +227,15 @@ error_reporting(E_ALL);
             border: none;
             cursor: pointer;
             transition: background-color 0.3s;
+            padding: 10px 20px;
+            font-size: 16px;
         }
         .call-to-action button:hover {
             background-color: #0056b3;
-        }
-        .header {
+        } */
+
+
+        /* .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -198,7 +246,7 @@ error_reporting(E_ALL);
             font-weight: 600;
             color: #333;
             margin: 0;
-        }
+        } */
         .card-content {
             display: flex;
             flex-direction: column;
@@ -243,13 +291,41 @@ error_reporting(E_ALL);
         .card-content .button:hover {
             background-color: #0056b3;
         }
-        .card-title {
+        /* .card-title {
             grid-column: 1 / -1;
             font-size: 1.5rem;
             font-weight: 600;
             color: #333;
             margin-top: 20px;
+        } */
+
+        .card-title {
+        grid-column: 1 / -1;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         }
+
+        .card-title::after {
+        content: 'Create';
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 8px;
+        padding: 10px 20px;
+        margin-left: auto;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-size: 16px;
+        }
+
+        .card-title::after:hover {
+        background-color: #0056b3;
+        }
+        
         .profile-container {
             background-color: whitesmoke;
             padding: 20px;
@@ -303,14 +379,19 @@ error_reporting(E_ALL);
         <h3>Finfusion App</h3>
         <ul>
             <li><a href="#"><i class="fas fa-search"></i> Browse</a></li>
-            <li><a href="#"><i class="fas fa-shopping-cart"></i> Keranjang</a></li>
+            <!-- <li><a href="#"><i class="fas fa-shopping-cart"></i> Keranjang</a></li> -->
         </ul>
     </div>
     <div class="content">
         <h1>Home</h1>
+    <div class="container">
         <div class="header">
             <h2>Ikan Cupang</h2>
         </div>
+        <div class="call-to-action">
+            <button>Create</button>
+        </div>
+    </div>
         <div class="card-container">
             <!-- Ikan Cupang -->
             <div class="card">
@@ -326,7 +407,7 @@ error_reporting(E_ALL);
                 </div>
             </div>
             <!-- Halfsun -->
-            <div class="card">
+            <!-- <div class="card">
                 <div class="card-content">
                     <div class="graphic" style="background-image: url('img/halfsun_cupang.jpg')"></div>
                     <div class="copy">
@@ -337,9 +418,9 @@ error_reporting(E_ALL);
                         <button class="button">Detail</button>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- Plakat -->
-            <div class="card">
+            <!-- <div class="card">
                 <div class="card-content">
                     <div class="graphic" style="background-image: url('img/plakat_cupang.jpg')"></div>
                     <div class="copy">
@@ -350,9 +431,9 @@ error_reporting(E_ALL);
                         <button class="button">Detail</button>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- Halfmoon -->
-            <div class="card">
+            <!-- <div class="card">
                 <div class="card-content">
                     <div class="graphic" style="background-image: url('img/halfmoon_cupang.jpg')"></div>
                     <div class="copy">
@@ -363,8 +444,8 @@ error_reporting(E_ALL);
                         <button class="button">Detail</button>
                     </div>
                 </div>
-            </div>
-
+            </div> -->
+            
             <div class="card-title">Ikan Koi</div>
             <!-- Ikan Koi -->
             <div class="card">
@@ -380,7 +461,7 @@ error_reporting(E_ALL);
                 </div>
             </div>
             <!-- Tancho -->
-            <div class="card">
+            <!-- <div class="card">
                 <div class="card-content">
                     <div class="graphic" style="background-image: url('img/Tancho.jpg')"></div>
                     <div class="copy">
@@ -391,9 +472,9 @@ error_reporting(E_ALL);
                         <button class="button">Detail</button>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- Shiro Utsuri -->
-            <div class="card">
+            <!-- <div class="card">
                 <div class="card-content">
                     <div class="graphic" style="background-image: url('img/shiro.jpeg')"></div>
                     <div class="copy">
@@ -404,9 +485,9 @@ error_reporting(E_ALL);
                         <button class="button">Detail</button>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- Ochiba Shigure -->
-            <div class="card">
+            <!-- <div class="card">
                 <div class="card-content">
                     <div class="graphic" style="background-image: url('img/ochi.jpeg')"></div>
                     <div class="copy">
@@ -417,10 +498,7 @@ error_reporting(E_ALL);
                         <button class="button">Detail</button>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="call-to-action">
-            <button>Call to action</button>
+            </div> -->
         </div>
     </div>
     <div class="profile-container">

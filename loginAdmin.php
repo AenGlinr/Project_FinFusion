@@ -1,5 +1,4 @@
 <?php
-
 // menyertakan file koneksi database
 include "database.php";
 
@@ -20,11 +19,11 @@ if (isset($_SESSION["is_login"])) {
 
 // mengecek apakah form login sudah dikirim
 if (isset($_POST['login'])) {
-    // mendapatkan nilai username dan password dari form login
+    // mendapatkan nilai email dan password dari form login
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // query untuk mengecek keberadaan username dan password yang cocok di database
+    // query untuk mengecek keberadaan email dan password yang cocok di database
     $sql = "SELECT * FROM admin WHERE email='$email' AND password='$password'";
 
     // menjalankan query dan menyimpan hasilnya dalam variabel $result
@@ -35,12 +34,12 @@ if (isset($_POST['login'])) {
         // mengambil data pengguna dari hasil query
         $data = $result->fetch_assoc();
 
-        // menyimpan username dan menandai pengguna sudah login dalam sesi
-        $_SESSION["email"] = $data["email"];
+        // menyimpan email dan menandai pengguna sudah login dalam sesi
+        $_SESSION["username"] = $data["email"];
         $_SESSION["is_login"] = true;
 
         // membuat cookie untuk pengguna yang login dengan durasi 2 jam
-        setcookie($cookie_name, $username, time() + (7200), "/");
+        setcookie($cookie_name, $email, time() + (7200), "/");
 
         // mengarahkan pengguna ke halaman dashboard setelah berhasil login
         header("location: crud.php");
@@ -117,7 +116,9 @@ if (isset($_POST['login'])) {
         <h2>Login</h2>
         <!-- menampilkan pesan login jika ada -->
         <i><?= $login_message ?></i>
-
+        <form action="index.php" method="GET">
+        <button type="submit" class="back-button">&larr;</button>
+    </form>
         <!-- form login -->
         <form action="loginAdmin.php" method="POST">
             <input type="text" name="email" placeholder="Email" required>

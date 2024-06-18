@@ -1,60 +1,35 @@
 <?php
-// Ambil parameter dari URL
-$ikan = $_GET['ikan'] ?? '';
+include "database.php"; // Pastikan koneksi database di sini
 
-// Data detail ikan
-$details = [
-    'veiltail' => [
-        'name' => 'Veiltail',
-        'description' => 'Veiltail Betta fish have long, flowing tails that resemble a veil.',
-        'image' => 'img/veiltail_cupang.jpg'
-    ],
-    'halfsun' => [
-        'name' => 'Halfsun',
-        'description' => 'Halfsun Betta fish are a crossbreed between Halfmoon and other Betta species.',
-        'image' => 'img/halfsun_cupang.jpg'
-    ],
-    'plakat' => [
-        'name' => 'Plakat',
-        'description' => 'Plakat Betta fish have short, stubby fins and are known for their fighting ability.',
-        'image' => 'img/plakat_cupang.jpg'
-    ],
-    'halfmoon' => [
-        'name' => 'Halfmoon',
-        'description' => 'Halfmoon Betta fish have tails that spread 180 degrees, resembling a half-moon.',
-        'image' => 'img/halfmoon_cupang.jpg'
-    ],
-    'chagoi' => [
-        'name' => 'Chagoi',
-        'description' => 'Chagoi Koi fish are known for their gentle nature and brownish color.',
-        'image' => 'img/chagoi.jpg'
-    ],
-    'tancho' => [
-        'name' => 'Tancho',
-        'description' => 'Tancho Koi fish have a distinctive red spot on their heads, resembling the Japanese flag.',
-        'image' => 'img/Tanco.jpg'
-    ],
-    'shiro_utsuri' => [
-        'name' => 'Shiro Utsuri',
-        'description' => 'Shiro Utsuri Koi fish have a striking black and white pattern.',
-        'image' => 'img/shiro.png'
-    ],
-    'ochiba_shigure' => [
-        'name' => 'Ochiba Shigure',
-        'description' => 'Ochiba Shigure Koi fish have a unique pattern resembling autumn leaves.',
-        'image' => 'img/ochi.jpeg'
-    ],
-];
+// Pastikan id ikan tersedia di URL
+if (isset($_GET['ikan'])) {
+    $ikanId = $db->real_escape_string($_GET['ikan']);
 
-$detail = $details[$ikan] ?? null;
+    // Query untuk mendapatkan detail ikan
+    $sql = "SELECT * FROM ikan WHERE id = '$ikanId'";
+    $result = $db->query($sql);
+
+    if ($result->num_rows > 0) {
+        // Ambil data ikan
+        $row = $result->fetch_assoc();
+    } else {
+        echo "Ikan tidak ditemukan.";
+        exit();
+    }
+} else {
+    echo "ID ikan tidak disertakan.";
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail <?php echo $detail['name'] ?? 'Ikan'; ?></title>
+    <title>Detail Ikan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -110,21 +85,50 @@ $detail = $details[$ikan] ?? null;
         .back-button:hover {
             background-color: #0056b3;
         }
+
+        .add-to-cart-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .add-to-cart-form input[type="number"] {
+            width: 50px;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .add-to-cart-form button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart-form button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
+
 <body>
-    <form action="dashboard.php" method="GET">
-        <button type="submit" class="back-button">&larr;</button>
-    </form>
     <div class="container">
-        <?php if ($detail): ?>
-            <img src="<?php echo $detail['image']; ?>" alt="<?php echo $detail['name']; ?>">
-            <h1><?php echo $detail['name']; ?></h1>
-            <p><?php echo $detail['description']; ?></p>
-        <?php else: ?>
-            <h1>Detail tidak ditemukan</h1>
-            <p>Maaf, detail ikan yang Anda cari tidak ditemukan.</p>
-        <?php endif; ?>
+        <img src="img/<?php echo htmlspecialchars($row['img']); ?>" alt="<?php echo htmlspecialchars($row['nama_ikan']); ?>">
+        <h1><?php echo htmlspecialchars($row['nama_ikan']); ?></h1>
+        <p><?php echo htmlspecialchars($row['deskripsi']); ?></p>
+        <p class="price">Rp <?php echo number_format($row['harga'], 0, ',', '.'); ?></p>
+        <form class="add-to-cart-form" action="add_to_cart.php" method="POST">
+            <input type="hidden" name="id_ikan" value="<?php echo $ikanId; ?>">
+            <label for="jumlah">Jumlah:</label>
+            <input type="number" id="jumlah" name="jumlah" value="1" min="1" required>
+            <button type="submit">Tambah ke Keranjang</button>
+        </form>
+        <a href="index.php" class="back-button">Kembali</a>
     </div>
 </body>
+
 </html>

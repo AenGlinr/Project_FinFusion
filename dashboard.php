@@ -314,7 +314,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <p class="price">Rp ' . number_format($row["harga"], 0, ',', '.') . '</p>
                                     </div>
                                     <div class="button-container">
-                                        <a href="detail.php?ikan=' . $row["id"] . '" class="button">Detail</a>
+                                        <a href="detail.php?ikan=' . urlencode($row["id"]) . '" class="button">Detail</a>
                                     </div>
                                 </div>
                               </div>';

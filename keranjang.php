@@ -84,88 +84,122 @@
         <button type="submit" class="back-button">&larr;</button>
     </form>
     <div class="container">
-        <div class="item">
-            <img src="ikan1.jpg" alt="Ikan 1">
-            <div class="item-info">
-                <div class="item-name">Ikan Cupang</div>
-                <div class="item-details">Jantan</div>
-                <div class="item-price">Rp 5.000</div>
-            </div>
-            <div class="quantity">
-                <button onclick="decreaseQuantity(this)">-</button>
-                <input type="number" value="1" min="1">
-                <button onclick="increaseQuantity(this)">+</button>
-            </div>
-        </div>
+        <?php
+        session_start();
+        include "database.php"; // Pastikan file database.php sesuai dengan konfigurasi database Anda
 
-        <!-- Contoh -->
-        <div class="item">
-            <img src="ikan2.jpg" alt="Ikan 2">
-            <div class="item-info">
-                <div class="item-name">Ikan Koi</div>
-                <div class="item-details">Betina</div>
-                <div class="item-price">Rp 8.000</div>
-            </div>
-            <div class="quantity">
-                <button onclick="decreaseQuantity(this)">-</button>
-                <input type="number" value="1" min="1">
-                <button onclick="increaseQuantity(this)">+</button>
-            </div>
-        </div>
+        // Inisialisasi keranjang jika belum ada
+        if (!isset($_SESSION['keranjang'])) {
+            $_SESSION['keranjang'] = [];
+        }
 
-        <div class="total-price">Total: Rp 13.000</div>
+        // Inisialisasi total harga jika belum ada
+        if (!isset($_SESSION['total_harga'])) {
+            $_SESSION['total_harga'] = 0; // Inisialisasi jika belum ada
+        }
+
+        // Fungsi untuk menambah item ke keranjang
+        function tambahKeKeranjang($idIkan, $jumlah, $itemName, $itemPrice, $itemImg)
+        {
+            // Cek apakah item sudah ada di dalam keranjang session
+            foreach ($_SESSION['keranjang'] as &$item) {
+                if ($item['id_ikan'] === $idIkan) {
+                    // Update jumlah jika item sudah ada di keranjang
+                    $item['jumlah'] += $jumlah;
+                    return; // Keluar dari fungsi setelah update
+                }
+            }
+
+            // Jika item belum ada di keranjang, tambahkan sebagai item baru
+            $_SESSION['keranjang'][] = [
+                'id_ikan' => $idIkan,
+                'jumlah' => $jumlah,
+                'nama_ikan' => $itemName,
+                'harga' => $itemPrice,
+                'img' => $itemImg
+            ];
+        }
+
+        // Cek apakah ada data yang dikirimkan dari detail.php
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_ikan'], $_POST['jumlah'])) {
+            $idIkan = $_POST['id_ikan'];
+            $jumlah = $_POST['jumlah'];
+
+            // Query untuk mendapatkan detail ikan berdasarkan $idIkan
+            $sql = "SELECT * FROM ikan WHERE id = ?";
+            $stmt = $db->prepare($sql);
+            $stmt->bind_param('s', $idIkan);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $itemName = htmlspecialchars($row['nama_ikan']);
+                $itemPrice = $row['harga'];
+                $itemImg = htmlspecialchars($row['img']);
+
+                // Panggil fungsi tambahKeKeranjang untuk menambahkan ke session keranjang
+                tambahKeKeranjang($idIkan, $jumlah, $itemName, $itemPrice, $itemImg);
+
+                // Simpan total harga ke session
+                $_SESSION['total_harga'] += $itemPrice * $jumlah;
+
+                $stmt->close();
+            }
+        }
+
+        // Menampilkan semua item dalam keranjang
+        foreach ($_SESSION['keranjang'] as $item) {
+            echo '<div class="item">';
+            echo '<img src="img/' . (isset($item['img']) ? $item['img'] : '') . '" alt="' . $item['nama_ikan'] . '">';
+            echo '<div class="item-info">';
+            echo '<div class="item-name">' . $item['nama_ikan'] . '</div>';
+            echo '<div class="item-price">Rp ' . number_format($item['harga'], 0, ',', '.') . '</div>';
+            echo '</div>';
+            echo '<div class="quantity">';
+            echo '<button onclick="decreaseQuantity(this)">-</button>';
+            echo '<input type="number" value="' . $item['jumlah'] . '" min="1">';
+            echo '<button onclick="increaseQuantity(this)">+</button>';
+            echo '</div>';
+            echo '</div>';
+        }
+
+        // Menampilkan total harga
+        echo '<div class="total-price">Total: Rp ' . number_format($_SESSION['total_harga'], 0, ',', '.') . '</div>';
+        ?>
     </div>
 
     <script>
-        // menambah jml item ketika + diklik
+        // Fungsi JavaScript untuk menambah dan mengurangi jumlah item
         function increaseQuantity(button) {
-            // mengambil kotak input jumlah item yang ada sebelum button +
             var input = button.previousElementSibling;
-            // mengambil jumlah item saat ini dari kotak input dan mengonversinya ke dalam angka
             var currentValue = parseInt(input.value);
-            // menambah jml item 1
             input.value = currentValue + 1;
-            // mengupdate total harga
             updateTotalPrice();
         }
 
-        // mengurangi jml item ketika - diklik
         function decreaseQuantity(button) {
-            // mengambil kotak input jumlah item yang ada setelah tombol -
             var input = button.nextElementSibling;
-            // mengambil jumlah item saat ini dari kotak input dan mengonversinya ke dalam angka
             var currentValue = parseInt(input.value);
-            // periksa apakah item saat ini > 1
             if (currentValue > 1) {
-                // mengurangi jml item 1
                 input.value = currentValue - 1;
-                // mengupdate total harga
                 updateTotalPrice();
             }
         }
 
-        // mengupdate total harga
         function updateTotalPrice() {
-            // ambil semua item di keranjang
             var items = document.querySelectorAll('.item');
-            // inisialisasi total harga 0
             var totalPrice = 0;
-            // iterasi item dlm keranjang
             items.forEach(function(item) {
-                // mengambil harga dari setiap item
                 var priceElement = item.querySelector('.item-price');
-                // mengambil jumlah item dari setiap item
                 var quantityInput = item.querySelector('input[type="number"]');
-                // mengubah harga menjadi angka bulat
                 var price = parseInt(priceElement.innerText.replace('Rp ', '').replace('.', ''));
-                // mengubah jumlah item menjadi angka bulat
                 var quantity = parseInt(quantityInput.value);
-                // hitung total harga dikali jml item
                 totalPrice += price * quantity;
             });
-            // menampilkan total harga
             document.querySelector('.total-price').innerText = 'Total: Rp ' + totalPrice.toLocaleString();
         }
+        updateTotalPrice();
     </script>
 </body>
 

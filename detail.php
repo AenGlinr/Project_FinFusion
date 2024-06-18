@@ -42,32 +42,42 @@ if (isset($_GET['ikan'])) {
             min-height: 100vh;
             background-image: url("bg 1.png");
         }
+
         .container {
-            width: 400px; /* Fixed width for the card */
+            width: 400px;
+            /* Fixed width for the card */
             padding: 20px;
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            text-align: center; /* Center the content */
+            text-align: center;
+            /* Center the content */
         }
+
         .container img {
-            width: 400px; /* Set a fixed width */
-            height: 350px; /* Set a fixed height */
-            object-fit: cover; /* Ensure the image covers the entire area */
+            width: 400px;
+            /* Set a fixed width */
+            height: 350px;
+            /* Set a fixed height */
+            object-fit: cover;
+            /* Ensure the image covers the entire area */
             border-radius: 8px;
             margin-bottom: 20px;
         }
+
         .container h1 {
             font-size: 2rem;
             margin-bottom: 20px;
             text-align: center;
         }
+
         .container p {
             font-size: 1rem;
             line-height: 1.6;
             color: #333;
             text-align: center;
         }
+
         .back-button {
             position: absolute;
             top: 20px;
@@ -82,6 +92,7 @@ if (isset($_GET['ikan'])) {
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
         .back-button:hover {
             background-color: #0056b3;
         }
@@ -112,6 +123,11 @@ if (isset($_GET['ikan'])) {
         .add-to-cart-form button:hover {
             background-color: #0056b3;
         }
+
+        .quantity {
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 
@@ -121,14 +137,36 @@ if (isset($_GET['ikan'])) {
         <h1><?php echo htmlspecialchars($row['nama_ikan']); ?></h1>
         <p><?php echo htmlspecialchars($row['deskripsi']); ?></p>
         <p class="price">Rp <?php echo number_format($row['harga'], 0, ',', '.'); ?></p>
-        <form class="add-to-cart-form" action="add_to_cart.php" method="POST">
+        <form class="add-to-cart-form" action="keranjang.php" method="POST">
             <input type="hidden" name="id_ikan" value="<?php echo $ikanId; ?>">
             <label for="jumlah">Jumlah:</label>
-            <input type="number" id="jumlah" name="jumlah" value="1" min="1" required>
+            <div class="quantity">
+                <button type="button" onclick="decreaseQuantity(this)">-</button>
+                <input type="number" id="jumlah" name="jumlah" value="1" min="1">
+                <button type="button" onclick="increaseQuantity(this)">+</button>
+            </div>
             <button type="submit">Tambah ke Keranjang</button>
         </form>
-        <a href="index.php" class="back-button">Kembali</a>
+
+        <a href="dashboard.php" class="back-button">Kembali</a>
     </div>
+
+    <script>
+        function decreaseQuantity(button) {
+            var input = button.nextElementSibling;
+            var value = parseInt(input.value, 10);
+            if (value > 1) {
+                input.value = value - 1;
+            }
+        }
+
+        function increaseQuantity(button) {
+            var input = button.previousElementSibling;
+            var value = parseInt(input.value, 10);
+            input.value = value + 1;
+        }
+    </script>
+
 </body>
 
 </html>

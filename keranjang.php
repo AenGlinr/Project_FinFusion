@@ -237,7 +237,7 @@
 
         // Menampilkan semua item dalam keranjang
         foreach ($_SESSION['keranjang'] as $item) {
-            $imgSrc = 'uploads/' . (isset($item['img']) ? $item['img'] : 'default.png');
+            $imgSrc = '' . (isset($item['img']) ? $item['img'] : 'default.png');
             echo '<div class="item">';
             echo '<img src="' . $imgSrc . '" alt="' . $item['nama_ikan'] . '">';
             echo '<div class="item-info">';

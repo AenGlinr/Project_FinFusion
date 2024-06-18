@@ -132,24 +132,23 @@ if (isset($_GET['ikan'])) {
 </head>
 
 <body>
-    <div class="container">
-        <img src="img/<?php echo htmlspecialchars($row['img']); ?>" alt="<?php echo htmlspecialchars($row['nama_ikan']); ?>">
-        <h1><?php echo htmlspecialchars($row['nama_ikan']); ?></h1>
-        <p><?php echo htmlspecialchars($row['deskripsi']); ?></p>
-        <p class="price">Rp <?php echo number_format($row['harga'], 0, ',', '.'); ?></p>
-        <form class="add-to-cart-form" action="keranjang.php" method="POST">
-            <input type="hidden" name="id_ikan" value="<?php echo $ikanId; ?>">
-            <label for="jumlah">Jumlah:</label>
-            <div class="quantity">
-                <button type="button" onclick="decreaseQuantity(this)">-</button>
-                <input type="number" id="jumlah" name="jumlah" value="1" min="1">
-                <button type="button" onclick="increaseQuantity(this)">+</button>
-            </div>
-            <button type="submit">Tambah ke Keranjang</button>
-        </form>
-
-        <a href="dashboard.php" class="back-button">Kembali</a>
-    </div>
+<div class="container">
+    <img src="<?php echo htmlspecialchars($row['img']); ?>" alt="<?php echo htmlspecialchars($row['nama_ikan']); ?>" class="fish-image">
+    <h1><?php echo htmlspecialchars($row['nama_ikan']); ?></h1>
+    <p><?php echo htmlspecialchars($row['deskripsi']); ?></p>
+    <p class="price">Rp <?php echo number_format($row['harga'], 0, ',', '.'); ?></p>
+    <form class="add-to-cart-form" action="keranjang.php" method="POST">
+        <input type="hidden" name="id_ikan" value="<?php echo $ikanId; ?>">
+        <label for="jumlah">Jumlah:</label>
+        <div class="quantity">
+            <button type="button" onclick="decreaseQuantity(this)">-</button>
+            <input type="number" id="jumlah" name="jumlah" value="1" min="1">
+            <button type="button" onclick="increaseQuantity(this)">+</button>
+        </div>
+        <button type="submit">Tambah ke Keranjang</button>
+    </form>
+    <a href="dashboard.php" class="back-button">Kembali</a>
+</div>
 
     <script>
         function decreaseQuantity(button) {

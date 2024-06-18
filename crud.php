@@ -9,9 +9,67 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
-// Load fish entries from session
-$fishEntries = isset($_SESSION['fish_entries']) ? $_SESSION['fish_entries'] : [];
+// Menampilkan semua kesalahan PHP
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
+// Menyertakan file konfigurasi database
+include 'database.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+    $fishName = $db->real_escape_string(htmlspecialchars($_POST['name'] ?? ''));
+    $description = $db->real_escape_string(htmlspecialchars($_POST['description'] ?? ''));
+    $price = $db->real_escape_string(htmlspecialchars($_POST['price'] ?? ''));
+    $imagePath = 'path/to/your/image'; // Sesuaikan path gambar Anda
+
+    // Query untuk menyimpan data ke tabel ikan
+    $sql = "INSERT INTO ikan (nama_ikan, deskripsi, harga, img) VALUES ('$fishName', '$description', '$price', '$imagePath')";
+
+    if ($db->query($sql) === TRUE) {
+        echo "Data berhasil disimpan";
+    } else {
+        echo "Error: " . $sql . "<br>" . $db->error;
+    }
+}
+
+// Load fish entries from database
+$fishEntries = [];
+$sql = "SELECT * FROM ikan";
+$result = $db->query($sql);
+
+if ($result && $result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $fishEntries[] = $row;
+    }
+}
+
+if (isset($_POST['delete'])) {
+    if (isset($_POST['id']) && !empty($_POST['id'])) {
+        $id = $db->real_escape_string($_POST['id']);
+        
+        // Proceed with the delete query
+        $sql = "DELETE FROM ikan WHERE id = $id";
+        echo $sql;
+        
+        if ($db->query($sql) === TRUE) {
+            echo "Record deleted successfully";
+        } else {
+            echo "Error deleting record: " . $db->error;
+        }
+    } else {
+        echo "ID is not set or empty. Cannot delete.";
+    }
+}
+
+// $sql = "DELETE FROM ikan WHERE id = $id";
+// echo $sql; // Debugging purposes
+
+// if ($db->query($sql) === TRUE) {
+//     echo "Record deleted successfully";
+// } else {
+//     echo "Error deleting record: " . $db->error;
+// }
 if (isset($_POST['logout'])) {
     // Menghapus semua variabel sesi kecuali $_SESSION['fish_entries']
     foreach ($_SESSION as $key => $value) {
@@ -24,39 +82,9 @@ if (isset($_POST['logout'])) {
     exit();
 }
 
-
-// Menampilkan semua kesalahan PHP
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// Proses form di sini
-$fishEntries = [];
-
-// Check if formcreate.php has submitted data
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
-    // Tangkap data dari formcreate.php
-    $fishName = htmlspecialchars($_POST['name']);
-    $description = htmlspecialchars($_POST['description']);
-    $price = htmlspecialchars($_POST['price']);
-
-    // Ambil data yang sudah ada dari session jika ada
-    $fishEntries = isset($_SESSION['fish_entries']) ? $_SESSION['fish_entries'] : [];
-
-    // Tambahkan data baru ke dalam array
-    $fishEntries[] = [
-        'name' => $fishName,
-        'description' => $description,
-        'price' => $price,
-        'image_path' => 'path/to/your/image'  // Path to be replaced with actual path if available
-    ];
-
-    // Simpan kembali ke session
-    $_SESSION['fish_entries'] = $fishEntries;
-}
-
+// Menutup koneksi
+$db->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="id">
@@ -235,17 +263,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             background-color: red;
         }
         .button-create {
-        margin-left: auto; /* Push the button to the right */
+            margin-left: auto; /* Push the button to the right */
         }
 
         .button-create button {
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        text-decoration: none; /* Remove underline from button inside link */
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none; /* Remove underline from button inside link */
         }
     </style>
 </head>
@@ -258,26 +286,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     </div>
     <div class="content">
         <h1>Home</h1>
-            <div class="button-create">
-                <a href="formcreate.php">
-                    <button>Create</button>
-                </a>
-            </div>
+        <div class="button-create">
+            <a href="formcreate.php">
+                <button>Create</button>
+            </a>
+        </div>
         <div class="container">
             <div class="card-container">
                 <?php foreach ($fishEntries as $entry): ?>
                     <div class="card">
                         <div class="card-content">
-                            <div class="graphic" style="background-image: url('<?php echo $entry['image_path']; ?>')"></div>
+                            <img src="<?php echo htmlspecialchars($entry['img'] ?? ''); ?>" alt="Fish Image">
                             <div class="copy">
-                                <h3 class="subtitle"><?php echo $entry['name']; ?></h3>
-                                <p class="description"><?php echo $entry['description']; ?></p>
-                                <p class="description">Price: <?php echo $entry['price']; ?></p>
+                                <h3 class="subtitle"><?php echo htmlspecialchars($entry['nama_ikan'] ?? ''); ?></h3>
+                                <p class="description"><?php echo htmlspecialchars($entry['deskripsi'] ?? ''); ?></p>
+                                <p class="description">Price: <?php echo htmlspecialchars($entry['harga'] ?? ''); ?></p>
                             </div>
                             <div class="button-container">
                                 <button class="button">Detail</button>
                             </div>
                         </div>
+                        <form action="crud.php" method="POST">
+                            <input type="hidden" name="id" value="<?php echo htmlspecialchars($entry['id'] ?? ''); ?>">
+                            <button type="submit" name="delete" class="button">Delete</button>
+                        </form>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -285,8 +317,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     </div>
     <div class="profile-container">
         <img src="profile.png" alt="Profile Image" class="profile-image">
-        <h2 class="username"><?= htmlspecialchars($_SESSION["username"]) ?></h2>
-        <form action="crud.php" method="POST">
+        <h2 class="username"><?= htmlspecialchars($_SESSION["username"] ?? '') ?></h2>
+        <form action="" method="POST">
             <input type="submit" name="logout" value="Logout" class="logout-button">
         </form>
     </div>

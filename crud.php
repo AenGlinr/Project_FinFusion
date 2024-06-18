@@ -109,10 +109,6 @@ $db->close();
             margin: 0;
             padding: 0;
             display: flex;
-            height: 100vh;
-            background: url('bg 1.png') no-repeat center center;
-            background-size: cover;
-            position: relative;
         }
         .sidebar {
             box-sizing: border-box;
@@ -191,17 +187,16 @@ $db->close();
         }
 
         .card {
-        width: 262px;
-        height: 350px; 
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        position: relative; /* Pastikan setiap kartu memiliki position: relative */
+            width: 262px;
+            height: auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .card img {
@@ -221,15 +216,14 @@ $db->close();
             line-height: 1.5;
             color: #555;
         }
-        .card button {
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        text-decoration: none;
-        transition: background-color 0.3s;
+        .card .button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.3s;
         }
 
         .card button:hover {
@@ -312,6 +306,7 @@ $db->close();
                 <?php foreach ($fishEntries as $entry): ?>
                     <div class="card">
                         <div class="card-content">
+                        <div class="graphic" style="background-image: url(\'img/' . $row["img"] . '\')"></div>
                             <img src="<?php echo htmlspecialchars($entry['img'] ?? ''); ?>" alt="Fish Image">
                             <div class="copy">
                                 <h3 class="subtitle"><?php echo htmlspecialchars($entry['nama_ikan'] ?? ''); ?></h3>

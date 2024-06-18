@@ -168,7 +168,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-size: 1rem;
             line-height: 1.5;
             color: #555;
-            margin: 5px 0;
         }
 
         .card .button {
@@ -301,27 +300,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Query untuk mendapatkan data ikan dari tabel ikan
             $sql = "SELECT * FROM ikan";
             $result = $db->query($sql);
-
+            
             if ($result->num_rows > 0) {
-                // Output data dari setiap baris
                 while ($row = $result->fetch_assoc()) {
                     echo '<div class="card">
-                                <div class="card-content">
-                                    <div class="graphic" style="background-image: url(\'img/' . $row["img"] . '\')"></div>
-                                    <div class="copy">
-                                        <h3 class="subtitle">' . $row["nama_ikan"] . '</h3>
-                                        <p class="description">' . $row["deskripsi"] . '</p>
-                                        <p class="price">Rp ' . number_format($row["harga"], 0, ',', '.') . '</p>
-                                    </div>
-                                    <div class="button-container">
-                                        <a href="detail.php?ikan=' . urlencode($row["id"]) . '" class="button">Detail</a>
-                                    </div>
+                            <div class="card-content">
+                                <img src="' . htmlspecialchars($row["img"]) . '" alt="Fish Image">
+                                <div class="copy">
+                                    <h3 class="subtitle">' . htmlspecialchars($row["nama_ikan"]) . '</h3>
+                                    <p class="description">' . htmlspecialchars($row["deskripsi"]) . '</p>
+                                    <p class="price">Rp ' . number_format($row["harga"], 0, ',', '.') . '</p>
                                 </div>
-                              </div>';
+                                <div class="button-container">
+                                    <a href="detail.php?ikan=' . urlencode($row["id"]) . '" class="button">Detail</a>
+                                </div>
+                            </div>
+                          </div>';
                 }
             } else {
                 echo "0 results";
             }
+            
             // Menutup koneksi
             $db->close();
             ?>

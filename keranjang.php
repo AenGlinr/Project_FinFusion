@@ -76,17 +76,84 @@
             font-size: 20px;
             text-align: right;
         }
+
+        .checkout-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .checkout-button:hover {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #1100BB;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            text-align: center;
+        }
+
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
+    <!-- file img dipindah ke uploads/uploads -->
     <form action="dashboard.php" method="GET">
         <button type="submit" class="back-button">&larr;</button>
     </form>
     <div class="container">
         <?php
         session_start();
-        include "database.php"; // Pastikan file database.php sesuai dengan konfigurasi database Anda
+        include "database.php";
 
         // Inisialisasi keranjang jika belum ada
         if (!isset($_SESSION['keranjang'])) {
@@ -148,10 +215,31 @@
             }
         }
 
+        // Fungsi untuk menghapus item dari keranjang
+        function hapusDariKeranjang($idIkan)
+        {
+            foreach ($_SESSION['keranjang'] as $key => $item) {
+                if ($item['id_ikan'] === $idIkan) {
+                    $_SESSION['total_harga'] -= $item['harga'] * $item['jumlah'];
+                    unset($_SESSION['keranjang'][$key]);
+                    // Reindex array setelah penghapusan
+                    $_SESSION['keranjang'] = array_values($_SESSION['keranjang']);
+                    break;
+                }
+            }
+        }
+
+        // Cek apakah ada request untuk menghapus item
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['hapus_id_ikan'])) {
+            $hapusIdIkan = $_POST['hapus_id_ikan'];
+            hapusDariKeranjang($hapusIdIkan);
+        }
+
         // Menampilkan semua item dalam keranjang
         foreach ($_SESSION['keranjang'] as $item) {
+            $imgSrc = 'uploads/' . (isset($item['img']) ? $item['img'] : 'default.png');
             echo '<div class="item">';
-            echo '<img src="img/' . (isset($item['img']) ? $item['img'] : '') . '" alt="' . $item['nama_ikan'] . '">';
+            echo '<img src="' . $imgSrc . '" alt="' . $item['nama_ikan'] . '">';
             echo '<div class="item-info">';
             echo '<div class="item-name">' . $item['nama_ikan'] . '</div>';
             echo '<div class="item-price">Rp ' . number_format($item['harga'], 0, ',', '.') . '</div>';
@@ -161,12 +249,33 @@
             echo '<input type="number" value="' . $item['jumlah'] . '" min="1">';
             echo '<button onclick="increaseQuantity(this)">+</button>';
             echo '</div>';
+            echo '<form method="POST" onsubmit="return confirm(\'Apakah Anda yakin ingin menghapus item ini?\')">';
+            echo '<input type="hidden" name="hapus_id_ikan" value="' . $item['id_ikan'] . '">';
+            echo '<button type="submit" class="remove-button">Hapus</button>';
+            echo '</form>';
             echo '</div>';
         }
 
         // Menampilkan total harga
         echo '<div class="total-price">Total: Rp ' . number_format($_SESSION['total_harga'], 0, ',', '.') . '</div>';
         ?>
+
+        <!-- Tombol Checkout -->
+        <button class="checkout-button" onclick="showModal()">Checkout</button>
+
+        <!-- Modal Konfirmasi Pembayaran -->
+        <div id="checkoutModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="hideModal()">&times;</span>
+                <h2>Konfirmasi Pembayaran</h2>
+                <p>Silakan konfirmasi detail pembelian Anda.</p>
+                <div class="total-price">Total: Rp <?php echo number_format($_SESSION['total_harga'], 0, ',', '.'); ?></div>
+                <form action="pembayaran.php" method="POST">
+                    <button type="submit" class="checkout-button">Konfirmasi dan Bayar</button>
+                </form>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -198,6 +307,16 @@
                 totalPrice += price * quantity;
             });
             document.querySelector('.total-price').innerText = 'Total: Rp ' + totalPrice.toLocaleString();
+        }
+
+        // Fungsi untuk menampilkan modal
+        function showModal() {
+            document.getElementById('checkoutModal').style.display = 'block';
+        }
+
+        // Fungsi untuk menyembunyikan modal
+        function hideModal() {
+            document.getElementById('checkoutModal').style.display = 'none';
         }
         updateTotalPrice();
     </script>

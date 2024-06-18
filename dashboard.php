@@ -1,4 +1,5 @@
 <?php
+include "database.php";
 
 // Pastikan untuk melakukan koneksi ke database di sini jika diperlukan
 
@@ -21,6 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,6 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             padding: 0;
             display: flex;
         }
+
         .sidebar {
             box-sizing: border-box;
             position: fixed;
@@ -46,6 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border-right: 1px solid #E0E0E0;
             padding: 20px;
         }
+
         .sidebar h3 {
             font-weight: 600;
             font-size: 20px;
@@ -54,13 +58,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: #000000;
             margin-bottom: 20px;
         }
+
         .sidebar ul {
             list-style: none;
             padding: 0;
         }
+
         .sidebar ul li {
             margin-bottom: 16px;
         }
+
         .sidebar ul li a {
             display: flex;
             align-items: center;
@@ -71,12 +78,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border-radius: 8px;
             transition: background 0.3s;
         }
+
         .sidebar ul li a:hover {
             background: #F7F7F7;
         }
+
         .sidebar ul li a i {
             margin-right: 8px;
         }
+
         .sidebar .list-title-style {
             display: flex;
             align-items: center;
@@ -85,12 +95,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: #000000;
             margin-bottom: 8px;
         }
+
         .sidebar .list-title-style i {
             margin-right: 8px;
         }
+
         .sidebar ul ul {
             padding-left: 16px;
         }
+
         .content {
             flex: 1;
             padding: 20px;
@@ -126,11 +139,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         .card {
             width: 262px;
-            height: 350px; 
+            height: auto;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -155,11 +168,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-size: 1rem;
             line-height: 1.5;
             color: #555;
+            margin: 5px 0;
         }
 
         .card .button {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 8px 16px;
             background-color: #007bff;
             color: #fff;
             border-radius: 8px;
@@ -222,7 +236,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .card-content .copy {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 3px;
         }
 
         .card-content .subtitle {
@@ -233,18 +247,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         .card-content .description {
             font-size: 0.9rem;
-            line-height: 1.5;
+            line-height: 1.4;
             color: #555;
         }
 
         .card-content .button-container {
             display: flex;
             justify-content: center;
-            margin-top: 5px;
+            margin-top: 8px;
         }
 
         .card-content .button {
-            padding: 10px 20px;
+            padding: 8px 16px;
             background-color: #007bff;
             color: #fff;
             border-radius: 8px;
@@ -266,6 +280,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
         <h3>Finfusion App</h3>
@@ -276,13 +291,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </ul>
     </div>
     <div class="content">
-            <h1>Home</h1>
-                    <div class="header">
-                        <h2>Ikan Cupang</h2>
-                    </div>
-            <div class="card-container">
-                <!-- Ikan Cupang -->
-                <div class="card">
+        <h1>Home</h1>
+        <div class="header">
+            <h2>Ikan Cupang</h2>
+        </div>
+        <div class="card-container">
+
+            <?php
+            // Query untuk mendapatkan data ikan dari tabel ikan
+            $sql = "SELECT * FROM ikan";
+            $result = $db->query($sql);
+
+            if ($result->num_rows > 0) {
+                // Output data dari setiap baris
+                while ($row = $result->fetch_assoc()) {
+                    echo '<div class="card">
+                                <div class="card-content">
+                                    <div class="graphic" style="background-image: url(\'img/' . $row["img"] . '\')"></div>
+                                    <div class="copy">
+                                        <h3 class="subtitle">' . $row["nama_ikan"] . '</h3>
+                                        <p class="description">' . $row["deskripsi"] . '</p>
+                                        <p class="price">Rp ' . number_format($row["harga"], 0, ',', '.') . '</p>
+                                    </div>
+                                    <div class="button-container">
+                                        <a href="detail.php?ikan=' . $row["id"] . '" class="button">Detail</a>
+                                    </div>
+                                </div>
+                              </div>';
+                }
+            } else {
+                echo "0 results";
+            }
+            // Menutup koneksi
+            $db->close();
+            ?>
+
+            <!-- Ikan Cupang -->
+            <!-- <div class="card">
                     <div class="card-content">
                         <div class="graphic" style="background-image: url('img/veiltail_cupang.jpg')"></div>
                         <div class="copy">
@@ -293,9 +338,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <a href="detail.php?ikan=veiltail" class="button">Detail</a>
                         </div>
                     </div>
-                </div>
-                <!-- Halfsun -->
-                <div class="card">
+                </div> -->
+            <!-- Halfsun -->
+            <!-- <div class="card">
                     <div class="card-content">
                         <div class="graphic" style="background-image: url('img/halfsun_cupang.jpg')"></div>
                         <div class="copy">
@@ -306,9 +351,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <a href="detail.php?ikan=halfsun" class="button">Detail</a>
                         </div>
                     </div>
-                </div>
-                <!-- Plakat -->
-                <div class="card">
+                </div> -->
+            <!-- Plakat -->
+            <!-- <div class="card">
                     <div class="card-content">
                         <div class="graphic" style="background-image: url('img/plakat_cupang.jpg')"></div>
                         <div class="copy">
@@ -319,9 +364,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <a href="detail.php?ikan=plakat" class="button">Detail</a>
                         </div>
                     </div>
-                </div>
-                <!-- Halfmoon -->
-                <div class="card">
+                </div> -->
+            <!-- Halfmoon -->
+            <!-- <div class="card">
                     <div class="card-content">
                         <div class="graphic" style="background-image: url('img/halfmoon_cupang.jpg')"></div>
                         <div class="copy">
@@ -332,11 +377,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <a href="detail.php?ikan=halfmoon" class="button">Detail</a>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="card-title">Ikan Koi</div>
-                <!-- Ikan Koi -->
-                <div class="card">
+            <!-- <div class="card-title">Ikan Koi</div> -->
+            <!-- Ikan Koi -->
+            <!-- <div class="card">
                     <div class="card-content">
                         <div class="graphic" style="background-image: url('img/chagoi.jpg')"></div>
                         <div class="copy">
@@ -347,9 +392,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <a href="detail.php?ikan=chagoi" class="button">Detail</a>
                         </div>
                     </div>
-                </div>
-                <!-- Tancho -->
-                <div class="card">
+                </div> -->
+            <!-- Tancho -->
+            <!-- <div class="card">
                     <div class="card-content">
                         <div class="graphic" style="background-image: url('img/Tanco.jpg')"></div>
                         <div class="copy">
@@ -360,9 +405,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <a href="detail.php?ikan=tancho" class="button">Detail</a>
                         </div>
                     </div>
-                </div>
-                <!-- Shiro Utsuri -->
-                <div class="card">
+                </div> -->
+            <!-- Shiro Utsuri -->
+            <!-- <div class="card">
                     <div class="card-content">
                         <div class="graphic" style="background-image: url('img/shiro.png')"></div>
                         <div class="copy">
@@ -373,9 +418,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <a href="detail.php?ikan=shiro_utsuri" class="button">Detail</a>
                         </div>
                     </div>
-                </div>
-                <!-- Ochiba Shigure -->
-                <div class="card">
+                </div> -->
+            <!-- Ochiba Shigure -->
+            <!-- <div class="card">
                     <div class="card-content">
                         <div class="graphic" style="background-image: url('img/ochi.jpeg')"></div>
                         <div class="copy">
@@ -386,12 +431,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <a href="detail.php?ikan=ochiba_shigure" class="button">Detail</a>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-            </div>
-            <div class="call-to-action">
-                <button>Call to action</button>
-            </div>
         </div>
+    </div>
 </body>
+
 </html>

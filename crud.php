@@ -1,35 +1,50 @@
 <?php
-// Memulai sesi atau melanjutkan sesi yang sudah ada
 session_start();
 
-// Mengecek apakah pengguna sudah login
+// Check if user is logged in
 if (!isset($_SESSION['username'])) {
-    // Mengarahkan pengguna ke halaman login jika belum login
     header('location: loginAdmin.php');
     exit();
 }
 
-// Menampilkan semua kesalahan PHP
+// Display all PHP errors
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Menyertakan file konfigurasi database
+// Include database configuration
 include 'database.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $fishName = $db->real_escape_string(htmlspecialchars($_POST['name'] ?? ''));
     $description = $db->real_escape_string(htmlspecialchars($_POST['description'] ?? ''));
     $price = $db->real_escape_string(htmlspecialchars($_POST['price'] ?? ''));
-    $imagePath = 'path/to/your/image'; // Sesuaikan path gambar Anda
 
-    // Query untuk menyimpan data ke tabel ikan
-    $sql = "INSERT INTO ikan (nama_ikan, deskripsi, harga, img) VALUES ('$fishName', '$description', '$price', '$imagePath')";
+    // Upload image
+    $imagePath = 'uploads/';
+    $imageName = $_FILES['image']['name'];
+    $imageTmpName = $_FILES['image']['tmp_name'];
+    $imageFileType = strtolower(pathinfo($imageName, PATHINFO_EXTENSION));
+    $imageUniqueName = uniqid('img_') . '.' . $imageFileType;
+    $fullImagePath = $imagePath . $imageUniqueName;
 
-    if ($db->query($sql) === TRUE) {
-        echo "Data berhasil disimpan";
+    // Check if the uploads directory exists
+    if (!file_exists($imagePath)) {
+        mkdir($imagePath, 0755, true); // Create the directory if it doesn't exist
+    }
+
+    // Move uploaded file to destination directory
+    if (move_uploaded_file($imageTmpName, $fullImagePath)) {
+        // Insert data into database
+        $sql = "INSERT INTO ikan (nama_ikan, deskripsi, harga, img) VALUES ('$fishName', '$description', '$price', '$fullImagePath')";
+
+        if ($db->query($sql) === TRUE) {
+            echo "Data berhasil disimpan";
+        } else {
+            echo "Error: " . $sql . "<br>" . $db->error;
+        }
     } else {
-        echo "Error: " . $sql . "<br>" . $db->error;
+        echo "Upload gambar gagal. Error: " . $_FILES['image']['error'];
     }
 }
 
@@ -44,16 +59,18 @@ if ($result && $result->num_rows > 0) {
     }
 }
 
+// Handle delete operation
 if (isset($_POST['delete'])) {
     if (isset($_POST['id']) && !empty($_POST['id'])) {
         $id = $db->real_escape_string($_POST['id']);
         
-        // Proceed with the delete query
+        // Perform delete query
         $sql = "DELETE FROM ikan WHERE id = $id";
-        echo $sql;
-        
         if ($db->query($sql) === TRUE) {
             echo "Record deleted successfully";
+            // Redirect to the same page to refresh the list
+            header('Location: crud.php');
+            exit();
         } else {
             echo "Error deleting record: " . $db->error;
         }
@@ -62,27 +79,20 @@ if (isset($_POST['delete'])) {
     }
 }
 
-// $sql = "DELETE FROM ikan WHERE id = $id";
-// echo $sql; // Debugging purposes
-
-// if ($db->query($sql) === TRUE) {
-//     echo "Record deleted successfully";
-// } else {
-//     echo "Error deleting record: " . $db->error;
-// }
+// Handle logout
 if (isset($_POST['logout'])) {
-    // Menghapus semua variabel sesi kecuali $_SESSION['fish_entries']
+    // Destroy session except $_SESSION['fish_entries']
     foreach ($_SESSION as $key => $value) {
         if ($key !== 'fish_entries') {
             unset($_SESSION[$key]);
         }
     }
-    // Mengarahkan pengguna ke halaman loginAdmin.php setelah logout
+    // Redirect user to loginAdmin.php after logout
     header('location: loginAdmin.php');
     exit();
 }
 
-// Menutup koneksi
+// Close database connection
 $db->close();
 ?>
 
@@ -174,23 +184,26 @@ $db->close();
             color: #333;
         }
         .card-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
         }
+
         .card {
-            width: 262px;
-            height: 350px; 
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+        width: 262px;
+        height: 350px; 
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative; /* Pastikan setiap kartu memiliki position: relative */
         }
+
         .card img {
             max-width: 100%;
             height: auto;
@@ -208,18 +221,21 @@ $db->close();
             line-height: 1.5;
             color: #555;
         }
-        .card .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: background-color 0.3s;
+        .card button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.3s;
         }
-        .card .button:hover {
-            background-color: #0056b3;
+
+        .card button:hover {
+        background-color: #0056b3;
         }
+
         .container {
             position: relative;
             width: 100%;
@@ -318,7 +334,7 @@ $db->close();
     <div class="profile-container">
         <img src="profile.png" alt="Profile Image" class="profile-image">
         <h2 class="username"><?= htmlspecialchars($_SESSION["username"] ?? '') ?></h2>
-        <form action="" method="POST">
+        <form action="crud.php" method="POST">
             <input type="submit" name="logout" value="Logout" class="logout-button">
         </form>
     </div>

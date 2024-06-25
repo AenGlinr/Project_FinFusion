@@ -79,11 +79,11 @@ if (isset($_POST['login'])) {
         }
 
         .login-container {
-            background-color: whitesmoke;
+            background-color: rgba(255, 255, 255, 0.5);
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 1);
-            width: 300px;
+            width: 450px;
         }
 
         .login-container h2 {
@@ -103,13 +103,15 @@ if (isset($_POST['login'])) {
         }
 
         .login-container input[type="submit"] {
-            background-color: green;
+            background-color: black;
             color: white;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         .login-container input[type="submit"]:hover {
-            background-color: blue;
+            background-color: black;
+            transform: scale(1.05);
         }
 
         .link-container {
@@ -119,9 +121,44 @@ if (isset($_POST['login'])) {
         }
 
         .link-container a {
-            text-decoration: none;
+            /* text-decoration: none;
             color: blue;
-            font-size: 14px;
+            font-size: 14px; */
+            display: inline-block;
+            /* Membuat elemen inline block agar bisa diatur padding dan margin */
+            background-color: black;
+            /* Latar belakang hitam */
+            color: white;
+            /* Teks berwarna putih */
+            padding: 10px 20px;
+            /* Padding atas/bawah 10px dan kiri/kanan 20px */
+            text-decoration: none;
+            /* Menghilangkan garis bawah pada teks */
+            border-radius: 5px;
+            /* Sudut melengkung */
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            /* Efek transisi untuk perubahan warna dan ukuran */
+        }
+
+        .link-container a:hover {
+            background-color: black;
+            /* Warna latar belakang saat hover */
+            transform: scale(1.05);
+            /* Membesarkan sedikit saat hover */
+        }
+
+        .link-container a:first-child:hover {
+            background-color: black;
+            /* Warna latar belakang Register saat hover */
+        }
+
+        .link-container a:last-child:hover {
+            background-color: black;
+            /* Warna latar belakang Login Admin saat hover */
+        }
+
+        h5 {
+            text-align: center;
         }
     </style>
 </head>
@@ -133,12 +170,20 @@ if (isset($_POST['login'])) {
         <!--menampilkan pesan login jika ada -->
         <i><?= $login_message ?></i>
 
+        <h5>Enter your username and password to login for this web</h5>
+
         <!--form login-->
         <form action="index.php" method="POST">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
             <input type="submit" name="login" value="LOGIN">
         </form>
+
+        <h5>
+            <span style="color: grey;">By clicking continue, you agree to our</span> Terms of Service
+            <span style="color: grey;">and</span> Privacy Policy
+        </h5>
+
         <div class="link-container">
             <a href="register.php">Register</a>
             <a href="loginAdmin.php">Login Admin</a>

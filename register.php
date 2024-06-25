@@ -54,7 +54,7 @@ if (isset($_POST["register"])) {
 
     // Menutup koneksi database
     $db->close();
-} 
+}
 
 ?>
 
@@ -79,11 +79,11 @@ if (isset($_POST["register"])) {
         }
 
         .login-container {
-            background-color: whitesmoke;
+            background-color: rgba(255, 255, 255, 0.5);
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 1);
-            width: 300px;
+            width: 450px;
         }
 
         .login-container h2 {
@@ -99,22 +99,49 @@ if (isset($_POST["register"])) {
             margin-top: 10px;
             margin-bottom: 10px;
             border: 1px solid black;
-            border-radius: 3px;
+            border-radius: 5px;
             box-sizing: border-box;
+
         }
 
         .login-container input[type="submit"] {
-            background-color: green;
+            background-color: black;
             color: white;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         .login-container input[type="submit"]:hover {
-            background-color: blue;
+            background-color: black;
+            transform: scale(1.05);
         }
 
         h5 {
             text-align: center;
+        }
+
+        .login-link {
+            display: inline-block;
+            /* Membuat elemen inline block agar bisa diatur padding dan margin */
+            background-color: black;
+            /* Latar belakang hitam */
+            color: white;
+            /* Teks berwarna putih */
+            padding: 10px 20px;
+            /* Padding atas/bawah 10px dan kiri/kanan 20px */
+            text-decoration: none;
+            /* Menghilangkan garis bawah pada teks */
+            border-radius: 5px;
+            /* Sudut melengkung */
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            /* Efek transisi untuk perubahan warna dan ukuran */
+        }
+
+        .login-link:hover {
+            background-color: black;
+            /* Warna latar belakang saat hover */
+            transform: scale(1.05);
+            /* Membesarkan sedikit saat hover */
         }
     </style>
 </head>
@@ -133,8 +160,12 @@ if (isset($_POST["register"])) {
             <input type="password" name="password" placeholder="Password" required>
             <input type="submit" name="register" value="SIGN UP">
         </form>
-        <h5>By clicking continue, you agree to our Terms of Service and Privacy Policy</h5>
-        <a href="index.php">Login</a>
+        <h5>
+            <span style="color: grey;">By clicking continue, you agree to our</span> Terms of Service
+            <span style="color: grey;">and</span> Privacy Policy
+        </h5>
+
+        <a href="index.php" class="login-link">Login</a>
 
     </div>
 

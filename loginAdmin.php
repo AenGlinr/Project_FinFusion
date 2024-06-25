@@ -75,11 +75,11 @@ if (isset($_POST['login'])) {
         }
 
         .login-container {
-            background-color: whitesmoke;
+            background-color: rgba(255, 255, 255, 0.5);
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 1);
-            width: 300px;
+            width: 450px;
         }
 
         .login-container h2 {
@@ -99,13 +99,15 @@ if (isset($_POST['login'])) {
         }
 
         .login-container input[type="submit"] {
-            background-color: green;
+            background-color: black;
             color: white;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         .login-container input[type="submit"]:hover {
-            background-color: blue;
+            background-color: black;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -117,8 +119,8 @@ if (isset($_POST['login'])) {
         <!-- menampilkan pesan login jika ada -->
         <i><?= $login_message ?></i>
         <form action="index.php" method="GET">
-        <button type="submit" class="back-button">&larr;</button>
-    </form>
+            <button type="submit" class="back-button">&larr;</button>
+        </form>
         <!-- form login -->
         <form action="loginAdmin.php" method="POST">
             <input type="text" name="email" placeholder="Email" required>

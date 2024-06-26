@@ -19,6 +19,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $fishName = $db->real_escape_string(htmlspecialchars($_POST['name'] ?? ''));
     $description = $db->real_escape_string(htmlspecialchars($_POST['description'] ?? ''));
     $price = $db->real_escape_string(htmlspecialchars($_POST['price'] ?? ''));
+    $stock = $db->real_escape_string(htmlspecialchars($_POST['stock'] ?? ''));
+
 
     // Upload image
     $imagePath = 'uploads/';
@@ -36,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     // Move uploaded file to destination directory
     if (move_uploaded_file($imageTmpName, $fullImagePath)) {
         // Insert data into database
-        $sql = "INSERT INTO ikan (nama_ikan, deskripsi, harga, img) VALUES ('$fishName', '$description', '$price', '$fullImagePath')";
+        $sql = "INSERT INTO ikan (nama_ikan, deskripsi, harga, stok, img) VALUES ('$fishName', '$description', '$price', '$stock', '$fullImagePath')";
 
         if ($db->query($sql) === TRUE) {
             echo "Data berhasil disimpan";
@@ -171,7 +173,7 @@ $db->close();
             flex: 1;
             padding: 20px;
             margin-left: 256px;
-            background: url('bg 1.png') no-repeat center center;
+            background-color: white;
         }
         .content h1 {
             font-size: 2rem;
@@ -230,11 +232,11 @@ $db->close();
         background-color: #0056b3;
         }
 
-        .container {
+        /* .container {
             position: relative;
             width: 100%;
             margin-top: 20px;
-        }
+        } */
         .profile-container {
             background-color: whitesmoke;
             padding: 20px;
@@ -301,21 +303,23 @@ $db->close();
                 <button>Create</button>
             </a>
         </div>
-        <div class="container">
+        <!-- <div class="container"> -->
             <div class="card-container">
                 <?php foreach ($fishEntries as $entry): ?>
                     <div class="card">
                         <div class="card-content">
-                        <div class="graphic" style="background-image: url(\'img/' . $row["img"] . '\')"></div>
+                        <!-- <div class="graphic" style="background-image: url(\'img/' . $row["img"] . '\')"></div> -->
                             <img src="<?php echo htmlspecialchars($entry['img'] ?? ''); ?>" alt="Fish Image">
                             <div class="copy">
                                 <h3 class="subtitle"><?php echo htmlspecialchars($entry['nama_ikan'] ?? ''); ?></h3>
                                 <p class="description"><?php echo htmlspecialchars($entry['deskripsi'] ?? ''); ?></p>
                                 <p class="description">Price: <?php echo htmlspecialchars($entry['harga'] ?? ''); ?></p>
+                                <p class="description">Stock: <?php echo htmlspecialchars($entry['stok'] ?? ''); ?></p>
                             </div>
                             <div class="button-container">
-                                <button class="button">Detail</button>
+                                <a href="formupdate.php?id=<?php echo htmlspecialchars($entry['id']); ?>" class="button">Update</a>
                             </div>
+
                         </div>
                         <form action="crud.php" method="POST">
                             <input type="hidden" name="id" value="<?php echo htmlspecialchars($entry['id'] ?? ''); ?>">

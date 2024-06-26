@@ -309,7 +309,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="copy">
                                     <h3 class="subtitle">' . htmlspecialchars($row["nama_ikan"]) . '</h3>
                                     <p class="description">' . htmlspecialchars($row["deskripsi"]) . '</p>
-                                    <p class="price">Rp ' . number_format($row["harga"], 0, ',', '.') . '</p>
+                                    <p class="price">Harga : Rp ' . number_format($row["harga"], 0, ',', '.') . '</p>
+                                    <p class="stock"> Stok: ' . number_format($row["stok"], 0, ',', '.') . '</p>
                                 </div>
                                 <div class="button-container">
                                     <a href="detail.php?ikan=' . urlencode($row["id"]) . '" class="button">Detail</a>
